@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+    <input id="email" placeholder="البريد">
+
+<input id="password"
+       type="password"
+       placeholder="كلمة المرور">
+
+<button onclick="login()">
+دخول
+</button>
+
+<script>
+
+function login(){
+
+  const email =
+    document.getElementById("email").value;
+
+  const password =
+    document.getElementById("password").value;
+
+  google.script.run
+    .withSuccessHandler(function(result){
+
+      if(result.success){
+
+       window.location.href = "?page=dashboard";
+      }else{
+
+        alert("بيانات غير صحيحة");
+
+      }
+
+    })
+    .loginUser(email,password);
+}
+
+</script>
+  </body>
+</html>
