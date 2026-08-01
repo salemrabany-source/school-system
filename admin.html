@@ -341,17 +341,20 @@ document.getElementById("employees").value
 
 
 
+fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec?action=addNewCenter", {
 
-google.script.run
+  method: "POST",
 
-.withSuccessHandler(function(result){
+  body: JSON.stringify(data)
 
+})
 
+.then(response => response.json())
 
+.then(result => {
 
 
 let html = `
-
 
 
 <h3>
@@ -359,21 +362,15 @@ let html = `
 </h3>
 
 
-
 <p>
-
 رقم المركز:
-
 <b>${result.id}</b>
-
 </p>
-
 
 
 <p>
 رابط الحضور:
 </p>
-
 
 
 <input
@@ -385,21 +382,16 @@ value="${result.link}"
 readonly
 
 style="
-
 width:100%;
-
 padding:10px;
-
 direction:ltr;
+"
 
-">
 
+>
 
 
 `;
-
-
-
 
 
 document.getElementById("result")
@@ -407,30 +399,24 @@ document.getElementById("result")
 .innerHTML = html;
 
 
-
-
-
 document.getElementById("copyBtn")
 
 .style.display="block";
 
 
-
-
-
 })
 
+.catch(error => {
 
+console.log(error);
 
-.addNewCenter(data);
+alert("حدث خطأ في الاتصال");
 
-
+});
 
 
 
 }
-
-
 
 
 
