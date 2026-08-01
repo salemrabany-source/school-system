@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<base target="_top">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+
+<style>
+
+* {
+box-sizing:border-box;
+}
+
+
+body {
+
+direction:rtl;
+
+width:100%;
+
+margin:0;
+
+min-height:100vh;
+
+font-family:'Cairo',Arial,sans-serif;
+
+background:
+linear-gradient(
+135deg,
+#006233 0%,
+#00853f 35%,
+#fcd116 55%,
+#d21034 100%
+);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+padding:20px;
+
+}
+
+
+
+.card {
+
+width:100%;
+
+max-width:420px;
+
+background:rgba(255,255,255,0.96);
+
+border-radius:25px;
+
+padding:35px 25px;
+
+text-align:center;
+
+box-shadow:0 15px 35px rgba(0,0,0,0.25);
+
+border-top:6px solid #006233;
+
+}
+
+
+
+.icon {
+
+width:80px;
+
+height:80px;
+
+margin:auto;
+
+border-radius:50%;
+
+background:#e0f2fe;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:40px;
+
+}
+
+
+
+h1 {
+
+font-size:24px;
+
+color:#164e63;
+
+margin:20px 0 10px;
+
+}
+
+
+
+.subtitle {
+
+color:#666;
+
+font-size:15px;
+
+margin-bottom:25px;
+
+}
+
+
+
+select,
+input {
+
+width:100%;
+
+padding:15px;
+
+border-radius:15px;
+
+border:1px solid #ddd;
+
+font-size:17px;
+
+font-family:'Cairo';
+
+margin-bottom:15px;
+
+background:#fafafa;
+
+}
+
+
+
+button {
+
+width:100%;
+
+padding:15px;
+
+border:none;
+
+border-radius:15px;
+
+font-size:18px;
+
+font-family:'Cairo';
+
+cursor:pointer;
+
+margin-top:12px;
+
+color:white;
+
+}
+
+
+
+.start {
+
+background:#16a34a;
+
+}
+
+
+
+.end {
+
+background:#dc2626;
+
+}
+
+
+
+#temporaryBtn {
+
+background:#f59e0b;
+
+display:none;
+
+}
+
+
+
+#result {
+
+margin-top:25px;
+
+font-size:16px;
+
+font-weight:bold;
+
+color:#164e63;
+
+min-height:30px;
+
+}
+
+
+
+.footer {
+
+margin-top:25px;
+
+color:#888;
+
+font-size:13px;
+
+}
+
+
+
+.temp-overlay {
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:100%;
+
+background:rgba(0,0,0,0.45);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+z-index:999;
+
+}
+
+
+
+.temp-popup {
+
+background:white;
+
+width:85%;
+
+max-width:350px;
+
+padding:25px;
+
+border-radius:25px;
+
+text-align:center;
+
+}
+
+
+
+.temp-popup h3 {
+
+color:#164e63;
+
+}
+
+
+
+.temp-popup button {
+
+margin-top:12px;
+
+}
+
+
+
+.temp-in {
+
+background:#16a34a;
+
+}
+
+
+
+.temp-out {
+
+background:#f97316;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="card">
+
+
+<div class="icon">
+📍
+</div>
+
+
+<h1>
+تسجيل حضور وانصراف الموظفين
+</h1>
+
+<div id="centerName"
+style="
+font-size:22px;
+font-weight:700;
+color:#006233;
+margin:15px 0;
+">
+</div>
+
+<p class="subtitle">
+اختر اسمك ثم سجل العملية
+</p>
+
+
+<select id="name">
+
+
+</select>
+
+ <select id="temporaryWorker" style="display:none">
+</select>
+
+
+<button class="start" onclick="send('دخول')">
+🟢 بدء الدوام
+</button>
+
+
+
+<button class="end" onclick="send('خروج')">
+🔴 انتهاء الدوام
+</button>
+
+
+
+<button id="temporaryBtn" onclick="sendTemporary()">
+تسجيل موظف مؤقت
+</button>
+
+
+
+<div id="result"></div>
+
+
+
+<div class="footer">
+نظام الحضور الذكي
+</div>
+
+
+
+</div>
+
+<script>
+
+let centerId = "<?= centerId ?>";
+
+let temporaryEmployee = null;
+
+
+// إنشاء معرف الجهاز
+
+let deviceId =
+localStorage.getItem("deviceId");
+
+
+if (!deviceId) {
+
+  deviceId =
+  Date.now()
+  +
+  "_"
+  +
+  Math.random()
+  .toString(36)
+  .substring(2);
+
+
+  localStorage.setItem(
+    "deviceId",
+    deviceId
+  );
+
+}
+
+
+// تخزين بيانات الموظفين
+
+let employeesList = [];
+
+
+
+// تحميل اسم المركز
+
+google.script.run
+
+.withSuccessHandler(function(name){
+
+  document.getElementById("centerName")
+  .innerHTML = "📚 " + name;
+
+})
+
+.getCenterName(centerId);
+
+
+
+
+
+// تحميل موظفي المركز
+
+google.script.run
+
+.withSuccessHandler(function(employees){
+
+
+  employeesList = employees;
+
+
+  let select =
+  document.getElementById("name");
+
+
+  select.innerHTML = "";
+
+
+
+  employees.forEach(function(employee){
+
+
+    let option =
+    document.createElement("option");
+
+
+
+    option.value =
+    employee.id;
+
+
+    option.textContent =
+    employee.name
+    +
+    " - "
+    +
+    employee.job;
+
+
+
+    option.dataset.name =
+    employee.name;
+
+
+    option.dataset.temp =
+    employee.temp || "";
+
+
+
+    select.appendChild(option);
+
+
+  });
+
+
+
+  checkTemporaryPermission();
+
+
+
+})
+
+.getEmployees(centerId);
+
+
+
+
+
+
+
+function getSelectedEmployee(){
+
+
+  let select =
+  document.getElementById("name");
+
+
+  let option =
+  select.options[select.selectedIndex];
+
+
+
+  return {
+
+    id: option.value,
+
+    name: option.dataset.name
+
+  };
+
+
+}
+
+
+
+
+
+
+function checkTemporaryPermission(){
+
+
+  let select =
+  document.getElementById("name");
+
+
+  let option =
+  select.options[select.selectedIndex];
+
+
+  let button =
+  document.getElementById("temporaryBtn");
+
+
+  let tempSelect =
+  document.getElementById("temporaryWorker");
+
+
+
+  if(option && option.dataset.temp == "نعم"){
+
+
+    button.style.display =
+    "block";
+
+
+  } else {
+
+
+    button.style.display =
+    "none";
+
+
+    tempSelect.style.display =
+    "none";
+
+
+    tempSelect.innerHTML =
+    "";
+
+
+    temporaryEmployee = null;
+
+
+  }
+
+
+}
+
+
+
+
+
+
+document
+.getElementById("name")
+.addEventListener(
+"change",
+checkTemporaryPermission
+);
+
+
+
+
+
+
+
+
+// التسجيل العادي
+
+function send(action){
+
+
+ let result =
+ document.getElementById("result");
+
+
+ result.innerHTML =
+ "⏳ جاري التحقق من الموقع...";
+
+
+
+ let employee =
+ getSelectedEmployee();
+
+
+
+
+
+ navigator.geolocation.getCurrentPosition(
+
+
+ function(position){
+
+
+ google.script.run
+
+ .withSuccessHandler(function(msg){
+
+
+ result.innerHTML =
+ msg;
+
+
+ })
+
+
+ .saveAttendance(
+
+
+ centerId,
+
+ employee.id,
+
+ employee.name,
+
+ action,
+
+ position.coords.latitude,
+
+ position.coords.longitude,
+
+ deviceId
+
+
+ );
+
+
+ },
+
+
+ function(){
+
+
+ result.innerHTML =
+ "⚠️ يجب السماح بالوصول إلى الموقع";
+
+
+ }
+
+
+ );
+
+
+}
+// التسجيل المؤقت
+
+function sendTemporary(){
+
+
+let tempSelect =
+document.getElementById("temporaryWorker");
+
+
+
+// أول ضغطة: إظهار قائمة الموظفين المنسيين
+
+if(
+tempSelect.style.display == "none"
+||
+tempSelect.options.length == 0
+){
+
+
+tempSelect.innerHTML = "";
+
+
+let current =
+getSelectedEmployee();
+
+
+let select =
+document.getElementById("name");
+
+
+
+for(let i=0;i<select.options.length;i++){
+
+
+let option =
+select.options[i];
+
+
+if(option.value != current.id){
+
+
+let newOption =
+document.createElement("option");
+
+
+newOption.value =
+option.value;
+
+
+newOption.textContent =
+option.textContent;
+
+
+tempSelect.appendChild(newOption);
+
+
+}
+
+
+}
+
+
+
+tempSelect.style.display =
+"block";
+
+
+
+document.getElementById("result").innerHTML =
+
+"اختر اسم الموظف المنسي ثم اضغط تسجيل مؤقت مرة أخرى";
+
+
+return;
+
+
+}
+
+
+
+
+
+
+// حفظ الموظف المختار
+
+temporaryEmployee = {
+
+  id: tempSelect.value,
+
+  name:
+  tempSelect.options[
+    tempSelect.selectedIndex
+  ].textContent.split(" - ")[0]
+
+};
+
+
+
+// إظهار نافذة اختيار العملية
+
+document.getElementById("tempActionBox")
+.style.display =
+"flex";
+
+
+}
+
+
+
+
+
+
+
+
+
+// تنفيذ تسجيل الموظف المنسي
+
+function chooseTemporary(action){
+
+
+document.getElementById("tempActionBox")
+.style.display =
+"none";
+
+
+
+if(!temporaryEmployee){
+
+
+document.getElementById("result").innerHTML =
+"اختر الموظف أولاً";
+
+
+return;
+
+
+}
+
+
+
+let result =
+document.getElementById("result");
+
+
+
+result.innerHTML =
+"⏳ جاري التسجيل المؤقت...";
+
+
+
+
+
+navigator.geolocation.getCurrentPosition(
+
+
+function(position){
+
+
+
+google.script.run
+
+.withSuccessHandler(function(msg){
+
+
+result.innerHTML =
+msg;
+
+
+})
+
+
+.saveAttendance(
+
+
+centerId,
+
+
+temporaryEmployee.id,
+
+
+temporaryEmployee.name,
+
+
+action,
+
+
+position.coords.latitude,
+
+
+position.coords.longitude,
+
+
+deviceId,
+
+
+"مؤقت"
+
+
+);
+
+
+
+},
+
+
+
+function(){
+
+
+result.innerHTML =
+"⚠️ يجب السماح بالوصول إلى الموقع";
+
+
+}
+
+
+
+);
+
+
+}
+
+
+
+</script>
+
+<div id="tempActionBox" class="temp-overlay" style="display:none;">
+
+  <div class="temp-popup">
+
+    <h3>تسجيل مؤقت</h3>
+
+    <p>اختر نوع العملية</p>
+
+    <button class="temp-in" onclick="chooseTemporary('دخول')">
+      🟢 دخول مؤقت
+    </button>
+
+
+    <button class="temp-out" onclick="chooseTemporary('خروج')">
+      🟠 خروج مؤقت
+    </button>
+
+  </div>
+
+</div>
+</body>
+
+</html>
