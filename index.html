@@ -411,50 +411,41 @@ let employeesList = [];
 
 // تحميل اسم المركز
 
-google.script.run
+fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec?action=getCenterName&centerId=" + centerId)
 
-.withSuccessHandler(function(name){
+.then(response => response.json())
+
+.then(name => {
 
   document.getElementById("centerName")
   .innerHTML = "📚 " + name;
 
-})
-
-.getCenterName(centerId);
-
-
+});
 
 
 
 // تحميل موظفي المركز
 
-google.script.run
+fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec?action=getEmployees&centerId=" + encodeURIComponent(centerId))
 
-.withSuccessHandler(function(employees){
+.then(response => response.json())
 
+.then(function(employees){
 
   employeesList = employees;
-
 
   let select =
   document.getElementById("name");
 
-
   select.innerHTML = "";
 
-
-
   employees.forEach(function(employee){
-
 
     let option =
     document.createElement("option");
 
-
-
     option.value =
     employee.id;
-
 
     option.textContent =
     employee.name
@@ -463,36 +454,27 @@ google.script.run
     +
     employee.job;
 
-
-
     option.dataset.name =
     employee.name;
-
 
     option.dataset.temp =
     employee.temp || "";
 
-
-
     select.appendChild(option);
-
 
   });
 
-
-
   checkTemporaryPermission();
-
-
 
 })
 
-.getEmployees(centerId);
+.catch(function(error){
 
+  console.error(error);
 
+  alert("تعذر تحميل الموظفين");
 
-
-
+});
 
 
 function getSelectedEmployee(){
@@ -618,39 +600,49 @@ function send(action){
 
  function(position){
 
+fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec?action=saveAttendance", {
 
- google.script.run
+  method: "POST",
 
- .withSuccessHandler(function(msg){
+  headers: {
+    "Content-Type": "application/json"
+  },
 
+  body: JSON.stringify({
 
- result.innerHTML =
- msg;
+    centerId: centerId,
 
+    employeeId: employee.id,
 
- })
+    employeeName: employee.name,
 
+    attendanceAction: action,
 
- .saveAttendance(
+    latitude: position.coords.latitude,
 
+    longitude: position.coords.longitude,
 
- centerId,
+    deviceId: deviceId
 
- employee.id,
+  })
 
- employee.name,
+})
 
- action,
+.then(response => response.text())
 
- position.coords.latitude,
+.then(function(msg){
 
- position.coords.longitude,
+  result.innerHTML = msg;
 
- deviceId
+})
 
+.catch(function(error){
 
- );
+  console.error(error);
 
+  result.innerHTML = "❌ حدث خطأ أثناء إرسال بيانات الحضور.";
+
+});
 
  },
 
@@ -826,49 +818,51 @@ navigator.geolocation.getCurrentPosition(
 
 function(position){
 
+gfetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec?action=saveAttendance", {
 
+  method: "POST",
 
-google.script.run
+  headers: {
+    "Content-Type": "application/json"
+  },
 
-.withSuccessHandler(function(msg){
+  body: JSON.stringify({
 
+    centerId: centerId,
 
-result.innerHTML =
-msg;
+    employeeId: temporaryEmployee.id,
 
+    employeeName: temporaryEmployee.name,
+
+    attendanceAction: action,
+
+    latitude: position.coords.latitude,
+
+    longitude: position.coords.longitude,
+
+    deviceId: deviceId,
+
+    employeeType: "مؤقت"
+
+  })
 
 })
 
+.then(response => response.text())
 
-.saveAttendance(
+.then(function(msg){
 
+  result.innerHTML = msg;
 
-centerId,
+})
 
+.catch(function(error){
 
-temporaryEmployee.id,
+  console.error(error);
 
+  result.innerHTML = "❌ حدث خطأ أثناء تسجيل الحضور.";
 
-temporaryEmployee.name,
-
-
-action,
-
-
-position.coords.latitude,
-
-
-position.coords.longitude,
-
-
-deviceId,
-
-
-"مؤقت"
-
-
-);
-
+});
 
 
 },
