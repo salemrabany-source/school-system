@@ -411,22 +411,59 @@ let employeesList = [];
 
 // تحميل اسم المركز
 
-fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec?action=getCenterName&centerId=" + centerId)
+fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec", {
+
+  method: "POST",
+
+  headers: {
+    "Content-Type": "application/json"
+  },
+
+  body: JSON.stringify({
+
+    action: "getCenterName",
+
+    centerId: centerId
+
+  })
+
+})
 
 .then(response => response.json())
 
-.then(name => {
+.then(function(name){
 
-  document.getElementById("centerName")
-  .innerHTML = "📚 " + name;
+  document.getElementById("centerName").innerHTML =
+  "📚 " + name;
+
+})
+
+.catch(function(err){
+
+  console.error(err);
 
 });
 
 
-
 // تحميل موظفي المركز
 
-fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec?action=getEmployees&centerId=" + encodeURIComponent(centerId))
+fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec", {
+
+  method: "POST",
+
+  headers: {
+    "Content-Type": "application/json"
+  },
+
+  body: JSON.stringify({
+
+    action: "getEmployees",
+
+    centerId: centerId
+
+  })
+
+})
 
 .then(response => response.json())
 
@@ -444,21 +481,16 @@ fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhR
     let option =
     document.createElement("option");
 
-    option.value =
-    employee.id;
+    option.value = employee.id;
 
     option.textContent =
-    employee.name
-    +
-    " - "
-    +
-    employee.job;
+      employee.name + " - " + employee.job;
 
     option.dataset.name =
-    employee.name;
+      employee.name;
 
     option.dataset.temp =
-    employee.temp || "";
+      employee.temp || "";
 
     select.appendChild(option);
 
@@ -468,11 +500,9 @@ fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhR
 
 })
 
-.catch(function(error){
+.catch(function(err){
 
-  console.error(error);
-
-  alert("تعذر تحميل الموظفين");
+  console.error(err);
 
 });
 
