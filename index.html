@@ -368,9 +368,9 @@ centerId:centerId
 
 .then(response=>response.json())
 
+.then(function(response){
 
-.then(function(name){
-
+let name = response.data;
 
 document.getElementById("centerName").innerHTML =
 "📚 " + name;
@@ -415,8 +415,9 @@ centerId:centerId
 .then(response=>response.json())
 
 
-.then(function(employees){
+.then(function(response){
 
+let employees = response.data;
 
 employeesList = employees;
 
@@ -623,12 +624,9 @@ deviceId:deviceId
 .then(response=>response.json())
 
 
-.then(function(msg){
-
-result.innerHTML = msg;
-
+.then(function(response){
+result.innerHTML = response.data;
 })
-
 
 .catch(function(error){
 
@@ -841,11 +839,9 @@ registrationType:"مؤقت"
 .then(response=>response.json())
 
 
-.then(function(msg){
-
-result.innerHTML=msg;
-
-});
+.then(function(response){
+result.innerHTML = response.data;
+})
 
 
 },
