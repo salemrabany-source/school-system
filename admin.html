@@ -291,49 +291,34 @@ onclick="copyLink()">
 
 <script>
 
-
 function addCenter(){
-
 
 
 let data = {
 
 
-
-centerName:
-
-document.getElementById("centerName").value,
+  centerName:
+  document.getElementById("centerName").value,
 
 
-
-location:
-
-document.getElementById("location").value,
+  location:
+  document.getElementById("location").value,
 
 
-
-manager:
-
-document.getElementById("manager").value,
+  manager:
+  document.getElementById("manager").value,
 
 
-
-email:
-
-document.getElementById("email").value,
+  email:
+  document.getElementById("email").value,
 
 
-
-whatsapp:
-
-document.getElementById("whatsapp").value,
+  whatsapp:
+  document.getElementById("whatsapp").value,
 
 
-
-employees:
-
-document.getElementById("employees").value
-
+  employees:
+  document.getElementById("employees").value
 
 
 };
@@ -341,17 +326,46 @@ document.getElementById("employees").value
 
 
 
-fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec?action=addNewCenter", {
+fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec", {
+
 
   method: "POST",
 
-  body: JSON.stringify(data)
+
+  headers: {
+
+    "Content-Type": "application/json"
+
+  },
+
+
+  body: JSON.stringify({
+
+    action: "addNewCenter",
+
+    centerName: data.centerName,
+
+    location: data.location,
+
+    manager: data.manager,
+
+    email: data.email,
+
+    whatsapp: data.whatsapp,
+
+    employees: data.employees
+
+  })
+
 
 })
 
+
 .then(response => response.json())
 
+
 .then(result => {
+
 
 
 let html = `
@@ -382,11 +396,14 @@ value="${result.link}"
 readonly
 
 style="
-width:100%;
-padding:10px;
-direction:ltr;
-"
 
+width:100%;
+
+padding:10px;
+
+direction:ltr;
+
+"
 
 >
 
@@ -394,9 +411,11 @@ direction:ltr;
 `;
 
 
+
 document.getElementById("result")
 
 .innerHTML = html;
+
 
 
 document.getElementById("copyBtn")
@@ -404,21 +423,24 @@ document.getElementById("copyBtn")
 .style.display="block";
 
 
+
 })
+
 
 .catch(error => {
 
-console.log(error);
+
+console.error(error);
+
 
 alert("حدث خطأ في الاتصال");
+
 
 });
 
 
 
 }
-
-
 
 function copyLink(){
 
