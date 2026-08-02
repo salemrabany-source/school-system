@@ -3,301 +3,138 @@
 
 <head>
 
-<base target="_top">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
-
 <style>
 
-* {
+*{
 box-sizing:border-box;
 }
 
-
-body {
+body{
 
 direction:rtl;
-
-width:100%;
-
 margin:0;
-
 min-height:100vh;
-
 font-family:'Cairo',Arial,sans-serif;
 
 background:
 linear-gradient(
 135deg,
-#006233 0%,
-#00853f 35%,
-#fcd116 55%,
-#d21034 100%
+#006233,
+#00853f,
+#fcd116,
+#d21034
 );
 
 display:flex;
-
 justify-content:center;
-
 align-items:center;
-
 padding:20px;
 
 }
 
 
-
-.card {
+.card{
 
 width:100%;
-
 max-width:420px;
-
-background:rgba(255,255,255,0.96);
-
+background:white;
 border-radius:25px;
-
 padding:35px 25px;
-
 text-align:center;
-
-box-shadow:0 15px 35px rgba(0,0,0,0.25);
-
+box-shadow:0 15px 35px rgba(0,0,0,.25);
 border-top:6px solid #006233;
 
 }
 
 
-
-.icon {
+.icon{
 
 width:80px;
-
 height:80px;
-
 margin:auto;
-
 border-radius:50%;
-
 background:#e0f2fe;
-
 display:flex;
-
 align-items:center;
-
 justify-content:center;
-
 font-size:40px;
 
 }
 
 
-
-h1 {
+h1{
 
 font-size:24px;
-
 color:#164e63;
 
-margin:20px 0 10px;
-
 }
-
-
-
-.subtitle {
-
-color:#666;
-
-font-size:15px;
-
-margin-bottom:25px;
-
-}
-
 
 
 select,
-input {
+input{
 
 width:100%;
-
 padding:15px;
-
 border-radius:15px;
-
 border:1px solid #ddd;
-
 font-size:17px;
-
 font-family:'Cairo';
-
 margin-bottom:15px;
-
-background:#fafafa;
 
 }
 
 
-
-button {
+button{
 
 width:100%;
-
 padding:15px;
-
 border:none;
-
 border-radius:15px;
-
 font-size:18px;
-
 font-family:'Cairo';
-
 cursor:pointer;
-
 margin-top:12px;
-
 color:white;
 
 }
 
 
-
-.start {
+.start{
 
 background:#16a34a;
 
 }
 
 
-
-.end {
+.end{
 
 background:#dc2626;
 
 }
 
 
-
-#temporaryBtn {
+#temporaryBtn{
 
 background:#f59e0b;
-
 display:none;
 
 }
 
 
-
-#result {
+#result{
 
 margin-top:25px;
-
-font-size:16px;
-
 font-weight:bold;
-
 color:#164e63;
-
-min-height:30px;
-
-}
-
-
-
-.footer {
-
-margin-top:25px;
-
-color:#888;
-
-font-size:13px;
-
-}
-
-
-
-.temp-overlay {
-
-position:fixed;
-
-top:0;
-
-left:0;
-
-width:100%;
-
-height:100%;
-
-background:rgba(0,0,0,0.45);
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-z-index:999;
-
-}
-
-
-
-.temp-popup {
-
-background:white;
-
-width:85%;
-
-max-width:350px;
-
-padding:25px;
-
-border-radius:25px;
-
-text-align:center;
-
-}
-
-
-
-.temp-popup h3 {
-
-color:#164e63;
-
-}
-
-
-
-.temp-popup button {
-
-margin-top:12px;
-
-}
-
-
-
-.temp-in {
-
-background:#16a34a;
-
-}
-
-
-
-.temp-out {
-
-background:#f97316;
 
 }
 
 
 </style>
-
 
 </head>
 
@@ -317,6 +154,7 @@ background:#f97316;
 تسجيل حضور وانصراف الموظفين
 </h1>
 
+
 <div id="centerName"
 style="
 font-size:22px;
@@ -326,18 +164,16 @@ margin:15px 0;
 ">
 </div>
 
-<p class="subtitle">
+
+<p>
 اختر اسمك ثم سجل العملية
 </p>
 
 
-<select id="name">
+<select id="name"></select>
 
 
-</select>
-
- <select id="temporaryWorker" style="display:none">
-</select>
+<select id="temporaryWorker" style="display:none"></select>
 
 
 <button class="start" onclick="send('دخول')">
@@ -345,11 +181,9 @@ margin:15px 0;
 </button>
 
 
-
 <button class="end" onclick="send('خروج')">
 🔴 انتهاء الدوام
 </button>
-
 
 
 <button id="temporaryBtn" onclick="sendTemporary()">
@@ -357,181 +191,203 @@ margin:15px 0;
 </button>
 
 
-
 <div id="result"></div>
 
 
-
-<div class="footer">
-نظام الحضور الذكي
 </div>
 
-
-
-</div>
 
 <script>
 
-let centerId = "<?= centerId ?>";
 
-let temporaryEmployee = null;
+// رابط النظام
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec";
 
 
-// إنشاء معرف الجهاز
+
+// قراءة رقم المركز من الرابط
+
+const params =
+new URLSearchParams(window.location.search);
+
+
+let centerId =
+params.get("center") || "";
+
+
+
+// معرف الجهاز
 
 let deviceId =
 localStorage.getItem("deviceId");
 
 
-if (!deviceId) {
+if(!deviceId){
 
-  deviceId =
-  Date.now()
-  +
-  "_"
-  +
-  Math.random()
-  .toString(36)
-  .substring(2);
+deviceId =
+Date.now()+"_"+Math.random()
+.toString(36)
+.substring(2);
 
 
-  localStorage.setItem(
-    "deviceId",
-    deviceId
-  );
+localStorage.setItem(
+"deviceId",
+deviceId
+);
 
 }
 
 
-// تخزين بيانات الموظفين
 
 let employeesList = [];
+
+let temporaryEmployee = null;
+
 
 
 
 // تحميل اسم المركز
 
-fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec", {
 
-  method: "POST",
+fetch(API_URL,{
 
-  headers: {
-    "Content-Type": "application/json"
-  },
+method:"POST",
 
-  body: JSON.stringify({
+headers:{
+"Content-Type":"text/plain"
+},
 
-    action: "getCenterName",
+body:JSON.stringify({
 
-    centerId: centerId
+action:"getCenterName",
 
-  })
+centerId:centerId
 
 })
 
-.then(response => response.json())
+})
+
+
+.then(r=>r.json())
+
 
 .then(function(name){
 
-  document.getElementById("centerName").innerHTML =
-  "📚 " + name;
 
-})
+document.getElementById("centerName").innerHTML =
+"📚 "+name;
 
-.catch(function(err){
-
-  console.error(err);
 
 });
 
 
-// تحميل موظفي المركز
 
 
-fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec", {
 
-  method: "POST",
 
-  headers: {
-    "Content-Type": "application/json"
-  },
+// تحميل الموظفين
 
-  body: JSON.stringify({
 
-    action: "getEmployees",
+fetch(API_URL,{
 
-    centerId: centerId
+method:"POST",
 
-  })
+headers:{
+"Content-Type":"text/plain"
+},
+
+
+body:JSON.stringify({
+
+action:"getEmployees",
+
+centerId:centerId
 
 })
 
-.then(response => response.json())
+})
+
+
+.then(r=>r.json())
+
 
 .then(function(employees){
 
-  employeesList = employees;
 
-  let select =
-  document.getElementById("name");
+employeesList = employees;
 
-  select.innerHTML = "";
 
-  employees.forEach(function(employee){
+let select =
+document.getElementById("name");
 
-    let option =
-    document.createElement("option");
 
-    option.value = employee.id;
+select.innerHTML="";
 
-    option.textContent =
-      employee.name + " - " + employee.job;
 
-    option.dataset.name =
-      employee.name;
 
-    option.dataset.temp =
-      employee.temp || "";
+employees.forEach(function(employee){
 
-    select.appendChild(option);
 
-  });
+let option =
+document.createElement("option");
 
-  checkTemporaryPermission();
 
-})
+option.value =
+employee.id;
 
-.catch(function(err){
 
-  console.error(err);
+option.textContent =
+employee.name+" - "+employee.job;
+
+
+option.dataset.name =
+employee.name;
+
+
+option.dataset.temp =
+employee.temp || "";
+
+
+select.appendChild(option);
+
 
 });
 
 
+
+checkTemporaryPermission();
+
+
+})
+
+.catch(function(error){
+
+console.error(error);
+
+});
 function getSelectedEmployee(){
 
 
-  let select =
-  document.getElementById("name");
+let select =
+document.getElementById("name");
 
 
-  let option =
-  select.options[select.selectedIndex];
+let option =
+select.options[select.selectedIndex];
 
 
+return {
 
-  return {
+id: option.value,
 
-    id: option.value,
+name: option.dataset.name
 
-    name: option.dataset.name
-
-  };
+};
 
 
 }
-
-
 
 
 
@@ -539,54 +395,32 @@ function getSelectedEmployee(){
 function checkTemporaryPermission(){
 
 
-  let select =
-  document.getElementById("name");
+let select =
+document.getElementById("name");
 
 
-  let option =
-  select.options[select.selectedIndex];
+let option =
+select.options[select.selectedIndex];
 
 
-  let button =
-  document.getElementById("temporaryBtn");
+let button =
+document.getElementById("temporaryBtn");
 
 
-  let tempSelect =
-  document.getElementById("temporaryWorker");
+if(option && option.dataset.temp=="نعم"){
 
+button.style.display="block";
 
+}else{
 
-  if(option && option.dataset.temp == "نعم"){
+button.style.display="none";
 
-
-    button.style.display =
-    "block";
-
-
-  } else {
-
-
-    button.style.display =
-    "none";
-
-
-    tempSelect.style.display =
-    "none";
-
-
-    tempSelect.innerHTML =
-    "";
-
-
-    temporaryEmployee = null;
-
-
-  }
-
+temporaryEmployee=null;
 
 }
 
 
+}
 
 
 
@@ -603,96 +437,112 @@ checkTemporaryPermission
 
 
 
-
-
-// التسجيل العادي
+// تسجيل الحضور والانصراف
 
 function send(action){
 
 
- let result =
- document.getElementById("result");
+let result =
+document.getElementById("result");
 
 
- result.innerHTML =
- "⏳ جاري التحقق من الموقع...";
-
-
-
- let employee =
- getSelectedEmployee();
+result.innerHTML =
+"⏳ جاري التحقق من الموقع...";
 
 
 
+let employee =
+getSelectedEmployee();
 
 
- navigator.geolocation.getCurrentPosition(
+
+navigator.geolocation.getCurrentPosition(
 
 
- function(position){
+function(position){
 
-fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec?action=saveAttendance", {
 
-  method: "POST",
+fetch(API_URL,{
 
-  headers: {
-    "Content-Type": "application/json"
-  },
+method:"POST",
 
-  body: JSON.stringify({
+headers:{
+"Content-Type":"text/plain"
+},
 
-    centerId: centerId,
 
-    employeeId: employee.id,
+body:JSON.stringify({
 
-    employeeName: employee.name,
+action:"saveAttendance",
 
-    attendanceAction: action,
+centerId:centerId,
 
-    latitude: position.coords.latitude,
+employeeId:employee.id,
 
-    longitude: position.coords.longitude,
+employeeName:employee.name,
 
-    deviceId: deviceId
+attendanceAction:action,
 
-  })
+latitude:position.coords.latitude,
+
+longitude:position.coords.longitude,
+
+deviceId:deviceId
 
 })
 
-.then(response => response.text())
+
+})
+
+
+.then(r=>r.json())
+
 
 .then(function(msg){
 
-  result.innerHTML = msg;
+
+result.innerHTML =
+msg;
+
 
 })
 
+
 .catch(function(error){
 
-  console.error(error);
+console.error(error);
 
-  result.innerHTML = "❌ حدث خطأ أثناء إرسال بيانات الحضور.";
+result.innerHTML =
+"❌ حدث خطأ أثناء التسجيل";
 
 });
 
- },
+
+},
 
 
- function(){
+
+function(){
 
 
- result.innerHTML =
- "⚠️ يجب السماح بالوصول إلى الموقع";
-
-
- }
-
-
- );
+result.innerHTML =
+"⚠️ يجب السماح بالوصول إلى الموقع";
 
 
 }
-// التسجيل المؤقت
+
+
+);
+
+
+}
+
+
+
+
+
+
+// تسجيل الموظف المؤقت
 
 function sendTemporary(){
 
@@ -702,16 +552,10 @@ document.getElementById("temporaryWorker");
 
 
 
-// أول ضغطة: إظهار قائمة الموظفين المنسيين
-
-if(
-tempSelect.style.display == "none"
-||
-tempSelect.options.length == 0
-){
+if(tempSelect.style.display=="none"){
 
 
-tempSelect.innerHTML = "";
+tempSelect.innerHTML="";
 
 
 let current =
@@ -730,7 +574,7 @@ let option =
 select.options[i];
 
 
-if(option.value != current.id){
+if(option.value!=current.id){
 
 
 let newOption =
@@ -750,19 +594,15 @@ tempSelect.appendChild(newOption);
 
 }
 
-
 }
 
 
 
-tempSelect.style.display =
-"block";
-
+tempSelect.style.display="block";
 
 
 document.getElementById("result").innerHTML =
-
-"اختر اسم الموظف المنسي ثم اضغط تسجيل مؤقت مرة أخرى";
+"اختر الموظف ثم اضغط تسجيل مؤقت مرة أخرى";
 
 
 return;
@@ -774,27 +614,27 @@ return;
 
 
 
+temporaryEmployee={
 
-// حفظ الموظف المختار
 
-temporaryEmployee = {
+id:
+tempSelect.value,
 
-  id: tempSelect.value,
 
-  name:
-  tempSelect.options[
-    tempSelect.selectedIndex
-  ].textContent.split(" - ")[0]
+name:
+tempSelect.options[
+tempSelect.selectedIndex
+]
+.textContent
+.split(" - ")[0]
+
 
 };
 
 
 
-// إظهار نافذة اختيار العملية
-
 document.getElementById("tempActionBox")
-.style.display =
-"flex";
+.style.display="flex";
 
 
 }
@@ -803,30 +643,16 @@ document.getElementById("tempActionBox")
 
 
 
-
-
-
-
-// تنفيذ تسجيل الموظف المنسي
-
 function chooseTemporary(action){
 
 
 document.getElementById("tempActionBox")
-.style.display =
-"none";
-
+.style.display="none";
 
 
 if(!temporaryEmployee){
 
-
-document.getElementById("result").innerHTML =
-"اختر الموظف أولاً";
-
-
 return;
-
 
 }
 
@@ -836,11 +662,8 @@ let result =
 document.getElementById("result");
 
 
-
 result.innerHTML =
-"⏳ جاري التسجيل المؤقت...";
-
-
+"⏳ جاري التسجيل...";
 
 
 
@@ -849,49 +672,51 @@ navigator.geolocation.getCurrentPosition(
 
 function(position){
 
-gfetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec?action=saveAttendance", {
 
-  method: "POST",
+fetch(API_URL,{
 
-  headers: {
-    "Content-Type": "application/json"
-  },
+method:"POST",
 
-  body: JSON.stringify({
+headers:{
+"Content-Type":"text/plain"
+},
 
-    centerId: centerId,
 
-    employeeId: temporaryEmployee.id,
+body:JSON.stringify({
 
-    employeeName: temporaryEmployee.name,
+action:"saveAttendance",
 
-    attendanceAction: action,
+centerId:centerId,
 
-    latitude: position.coords.latitude,
+employeeId:temporaryEmployee.id,
 
-    longitude: position.coords.longitude,
+employeeName:temporaryEmployee.name,
 
-    deviceId: deviceId,
+attendanceAction:action,
 
-    employeeType: "مؤقت"
+latitude:position.coords.latitude,
 
-  })
+longitude:position.coords.longitude,
+
+deviceId:deviceId,
+
+employeeType:"مؤقت"
+
 
 })
 
-.then(response => response.text())
+
+})
+
+
+.then(r=>r.json())
+
 
 .then(function(msg){
 
-  result.innerHTML = msg;
 
-})
+result.innerHTML=msg;
 
-.catch(function(error){
-
-  console.error(error);
-
-  result.innerHTML = "❌ حدث خطأ أثناء تسجيل الحضور.";
 
 });
 
@@ -902,44 +727,13 @@ gfetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIh
 
 function(){
 
-
 result.innerHTML =
-"⚠️ يجب السماح بالوصول إلى الموقع";
-
+"⚠️ يجب السماح بالوصول للموقع";
 
 }
-
 
 
 );
 
 
 }
-
-
-
-</script>
-
-<div id="tempActionBox" class="temp-overlay" style="display:none;">
-
-  <div class="temp-popup">
-
-    <h3>تسجيل مؤقت</h3>
-
-    <p>اختر نوع العملية</p>
-
-    <button class="temp-in" onclick="chooseTemporary('دخول')">
-      🟢 دخول مؤقت
-    </button>
-
-
-    <button class="temp-out" onclick="chooseTemporary('خروج')">
-      🟠 خروج مؤقت
-    </button>
-
-  </div>
-
-</div>
-</body>
-
-</html>
