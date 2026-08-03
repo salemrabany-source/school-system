@@ -287,7 +287,68 @@ onclick="copyLink()">
 
 
 <script>
+async function shareQR(){
 
+const qrUrl =
+"https://quickchart.io/qr?size=1000&text=" 
++
+encodeURIComponent(result.data.link);
+
+
+try{
+
+
+const response =
+await fetch(qrUrl);
+
+
+const blob =
+await response.blob();
+
+
+const file =
+new File(
+[blob],
+"كود_حضور_المركز.png",
+{
+type:"image/png"
+}
+);
+
+
+
+if(navigator.share && navigator.canShare({files:[file]})){
+
+
+await navigator.share({
+
+title:"كود حضور المركز",
+
+text:"كود الحضور الخاص بالمركز",
+
+files:[file]
+
+});
+
+
+}else{
+
+
+navigator.clipboard.writeText(result.data.link);
+
+
+alert("المشاركة غير مدعومة، تم نسخ رابط الحضور");
+
+}
+
+
+}catch(error){
+
+console.log(error);
+
+}
+
+}
 function addCenter(){
 
 
@@ -398,10 +459,6 @@ direction:ltr;
 "
 
 >
-<h3 style="color:#006233;margin-top:25px;">
-📌 كود الحضور الخاص بالمركز
-</h3>
-
 <img 
 src="https://quickchart.io/qr?size=1000&text=${encodeURIComponent(result.data.link)}"
 width="250"
@@ -412,15 +469,25 @@ style="margin-top:10px;"
 استخدم هذا الكود للدخول إلى صفحة تسجيل حضور المركز
 </p>
 
+<button 
+onclick="shareQR()"
+style="
+margin-top:15px;
+padding:12px 20px;
+border:none;
+border-radius:12px;
+background:#006233;
+color:white;
+font-size:16px;
+cursor:pointer;
+">
+📤 مشاركة كود الحضور
+</button>
 `;
-
-
 
 document.getElementById("result")
 
 .innerHTML = html;
-
-
 
 document.getElementById("copyBtn")
 
