@@ -293,6 +293,13 @@ margin:15px 0;
 
 </div>
 <script>
+function debug(message){
+
+  console.log(message);
+
+  document.getElementById("result").innerHTML = message;
+
+}
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec";
@@ -557,9 +564,7 @@ function send(action){
 let result =
 document.getElementById("result");
 
-
-result.innerHTML =
-"⏳ جاري التحقق من الموقع...";
+debug("1️⃣ بدء عملية التسجيل...");
 
 
 
@@ -570,7 +575,7 @@ getSelectedEmployee();
 
 getCurrentLocation(function(latitude, longitude){
 
-
+debug("2️⃣ تم الحصول على الموقع");
 
 fetch(API_URL,{
 
@@ -611,8 +616,17 @@ deviceId:deviceId
 
 .then(function(response){
 
-result.innerHTML = response.data;
+    debug("4️⃣ تم استلام الرد من الخادم");
 
+if(response.success){
+
+    debug("✅ " + response.data);
+
+}else{
+
+    debug("❌ " + response.error);
+
+}
 })
 
 
