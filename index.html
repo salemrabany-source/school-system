@@ -373,8 +373,15 @@ centerId:centerId
 })
 
 
-.then(response=>response.json())
+.then(async function(response){
 
+const text = await response.text();
+
+console.log(text);
+
+return JSON.parse(text);
+
+})
 
 .then(function(response){
 
@@ -828,13 +835,16 @@ result.innerHTML = response.data;
 
 })
 
-
 .catch(function(error){
 
 console.error(error);
 
-result.innerHTML =
-"❌ حدث خطأ أثناء التسجيل";
+debug(
+"❌ " +
+error.name +
+" : " +
+error.message
+);
 
 });
 
