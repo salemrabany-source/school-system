@@ -343,7 +343,7 @@ let temporaryEmployee = null;
 
 
 
-// جلب اسم المركز
+// جلب بيانات المركز
 
 fetch(API_URL,{
 
@@ -357,7 +357,7 @@ headers:{
 
 body:JSON.stringify({
 
-action:"getCenterName",
+action:"getCenterData",
 
 centerId:centerId
 
@@ -368,58 +368,26 @@ centerId:centerId
 
 .then(response=>response.json())
 
+
 .then(function(response){
 
-let name = response.data;
+
+let data = response.data;
+
+
 
 document.getElementById("centerName").innerHTML =
-"📚 " + name;
-
-
-})
-
-.catch(function(error){
-
-console.error(error);
-
-});
+"📚 " + data.centerName;
 
 
 
+let employees =
+data.employees;
 
 
-
-// جلب الموظفين
-
-fetch(API_URL,{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":"text/plain"
-
-},
-
-body:JSON.stringify({
-
-action:"getEmployees",
-
-centerId:centerId
-
-})
-
-})
-
-
-.then(response=>response.json())
-
-
-.then(function(response){
-
-let employees = response.data;
 
 employeesList = employees;
+
 
 
 let select =
@@ -477,17 +445,15 @@ checkTemporaryPermission();
 
 })
 
+
 .catch(function(error){
 
 console.error(error);
 
 document.getElementById("result").innerHTML =
-"❌ تعذر تحميل الموظفين";
+"❌ تعذر تحميل البيانات";
 
 });
-
-
-
 
 
 
@@ -584,6 +550,7 @@ function getCurrentLocation(successCallback){
   );
 
 }
+
 function send(action){
 
 
