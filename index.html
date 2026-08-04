@@ -561,6 +561,29 @@ checkTemporaryPermission
 );
 // تسجيل الدخول والخروج
 
+function getCurrentLocation(successCallback){
+
+  navigator.geolocation.getCurrentPosition(
+
+    function(position){
+
+      successCallback(
+        position.coords.latitude,
+        position.coords.longitude
+      );
+
+    },
+
+    function(){
+
+      document.getElementById("result").innerHTML =
+      "⚠️ يجب السماح بالوصول إلى الموقع";
+
+    }
+
+  );
+
+}
 function send(action){
 
 
@@ -578,10 +601,7 @@ getSelectedEmployee();
 
 
 
-navigator.geolocation.getCurrentPosition(
-
-
-function(position){
+getCurrentLocation(function(latitude, longitude){
 
 
 
@@ -608,9 +628,9 @@ employeeName:employee.name,
 
 attendanceAction:action,
 
-latitude:position.coords.latitude,
+latitude:latitude,
 
-longitude:position.coords.longitude,
+longitude:longitude,
 
 deviceId:deviceId
 
@@ -623,8 +643,11 @@ deviceId:deviceId
 
 
 .then(function(response){
+
 result.innerHTML = response.data;
+
 })
+
 
 .catch(function(error){
 
@@ -636,26 +659,10 @@ result.innerHTML =
 });
 
 
-},
-
-
-
-function(){
-
-
-result.innerHTML =
-"⚠️ يجب السماح بالوصول إلى الموقع";
+});
 
 
 }
-
-
-
-);
-
-
-}
-
 
 
 
@@ -766,7 +773,6 @@ document.getElementById("tempActionBox")
 
 
 
-
 function chooseTemporary(action){
 
 
@@ -792,10 +798,7 @@ result.innerHTML =
 
 
 
-navigator.geolocation.getCurrentPosition(
-
-
-function(position){
+getCurrentLocation(function(latitude, longitude){
 
 
 
@@ -822,13 +825,14 @@ employeeName:temporaryEmployee.name,
 
 attendanceAction:action,
 
-latitude:position.coords.latitude,
+latitude:latitude,
 
-longitude:position.coords.longitude,
+longitude:longitude,
 
 deviceId:deviceId,
 
 registrationType:"مؤقت"
+
 })
 
 })
@@ -838,30 +842,26 @@ registrationType:"مؤقت"
 
 
 .then(function(response){
+
 result.innerHTML = response.data;
+
 })
 
 
-},
+.catch(function(error){
 
-
-
-function(){
-
+console.error(error);
 
 result.innerHTML =
-"⚠️ يجب السماح بالوصول للموقع";
+"❌ حدث خطأ أثناء التسجيل";
+
+});
+
+
+});
 
 
 }
-
-
-
-);
-
-
-}
-
 
 
 </script>
