@@ -541,6 +541,7 @@ checkTemporaryPermission
 );
 // تسجيل الدخول والخروج
 
+
 function getCurrentLocation(successCallback){
 
   navigator.geolocation.getCurrentPosition(
@@ -618,8 +619,23 @@ deviceId:deviceId
 })
 
 
-.then(response=>response.json())
+.then(async function(response){
 
+    let text = await response.text();
+
+    console.log("الرد الخام:", text);
+
+    try{
+
+        return JSON.parse(text);
+
+    }catch(e){
+
+        throw new Error(text);
+
+    }
+
+})
 
 .then(function(response){
 
