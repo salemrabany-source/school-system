@@ -353,7 +353,7 @@ let isSending = false;
 // دالة اتصال موحدة مع Apps Script
 
 function callAPI(data){
-
+console.log("📌 CALL API DATA:", data);
 return fetch(API_URL,{
 method:"POST",
 headers:{
