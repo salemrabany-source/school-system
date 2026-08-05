@@ -350,36 +350,42 @@ let temporaryEmployee = null;
 
 
 
-// جلب بيانات المركز
+// دالة اتصال موحدة مع Apps Script
 
-fetch(API_URL,{
+function callAPI(data){
 
+return fetch(API_URL,{
 method:"POST",
-
 headers:{
-
 "Content-Type":"text/plain"
-
 },
+body:JSON.stringify(data)
 
-body:JSON.stringify({
+})
+
+.then(async function(response){
+
+let text = await response.text();
+
+console.log("API Response:", text);
+
+return JSON.parse(text);
+
+});
+
+}
+
+
+
+
+
+// جلب بيانات المركز والموظفين
+
+callAPI({
 
 action:"getCenterData",
 
 centerId:centerId
-
-})
-
-})
-
-
-.then(async function(response){
-
-const text = await response.text();
-
-console.log(text);
-
-return JSON.parse(text);
 
 })
 
@@ -389,18 +395,12 @@ return JSON.parse(text);
 let data = response.data;
 
 
-
 document.getElementById("centerName").innerHTML =
 "📚 " + data.centerName;
 
 
 
-let employees =
-data.employees;
-
-
-
-employeesList = employees;
+employeesList = data.employees;
 
 
 
@@ -412,37 +412,29 @@ select.innerHTML="";
 
 
 
-employees.forEach(function(employee){
-
+data.employees.forEach(function(employee){
 
 
 let option =
 document.createElement("option");
 
 
-
 option.value =
 employee.id;
 
 
-
 option.textContent =
-employee.name
-+
-" - "
-+
+employee.name +
+" - " +
 employee.job;
-
 
 
 option.dataset.name =
 employee.name;
 
 
-
 option.dataset.temp =
 employee.temp || "";
-
 
 
 select.appendChild(option);
@@ -454,7 +446,6 @@ select.appendChild(option);
 
 
 checkTemporaryPermission();
-
 
 
 })
@@ -471,6 +462,10 @@ document.getElementById("result").innerHTML =
 
 
 
+
+
+
+
 function getSelectedEmployee(){
 
 
@@ -482,17 +477,17 @@ let option =
 select.options[select.selectedIndex];
 
 
-
 return {
 
-id: option.value,
+id:option.value,
 
-name: option.dataset.name
+name:option.dataset.name
 
 };
 
-
 }
+
+
 
 
 
@@ -512,10 +507,16 @@ let button =
 document.getElementById("temporaryBtn");
 
 
+let tempSelect =
+document.getElementById("temporaryWorker");
+
+
 
 if(option && option.dataset.temp=="نعم"){
 
+
 button.style.display="block";
+
 
 }else{
 
@@ -523,13 +524,17 @@ button.style.display="block";
 button.style.display="none";
 
 
+tempSelect.style.display="none";
+
+tempSelect.innerHTML="";
+
 temporaryEmployee=null;
 
 
 }
 
-
 }
+
 
 
 
@@ -539,32 +544,57 @@ document
 "change",
 checkTemporaryPermission
 );
-// تسجيل الدخول والخروج
+
+
+
+
+
+
 
 
 function getCurrentLocation(successCallback){
 
-  navigator.geolocation.getCurrentPosition(
 
-    function(position){
+navigator.geolocation.getCurrentPosition(
 
-      successCallback(
-        position.coords.latitude,
-        position.coords.longitude
-      );
 
-    },
+function(position){
 
-    function(){
 
-      document.getElementById("result").innerHTML =
-      "⚠️ يجب السماح بالوصول إلى الموقع";
+successCallback(
 
-    }
+position.coords.latitude,
 
-  );
+position.coords.longitude
+
+);
+
+
+},
+
+
+function(){
+
+
+document.getElementById("result").innerHTML =
+"⚠️ يجب السماح بالوصول إلى الموقع";
+
 
 }
+
+
+);
+
+
+}
+
+
+
+
+
+
+
+// تسجيل الدخول والخروج
 
 function send(action){
 
@@ -572,31 +602,21 @@ function send(action){
 let result =
 document.getElementById("result");
 
-debug("1️⃣ بدء عملية التسجيل...");
-
-
 
 let employee =
 getSelectedEmployee();
 
 
-
-getCurrentLocation(function(latitude, longitude){
-
-debug("2️⃣ تم الحصول على الموقع");
-
-fetch(API_URL,{
-    redirect:"follow",
-method:"POST",
-
-headers:{
-
-"Content-Type":"text/plain"
-
-},
+result.innerHTML =
+"⏳ جاري التسجيل...";
 
 
-body:JSON.stringify({
+
+getCurrentLocation(function(latitude,longitude){
+
+
+
+callAPI({
 
 action:"saveAttendance",
 
@@ -616,49 +636,39 @@ deviceId:deviceId
 
 })
 
-})
-
-
-.then(async function(response){
-
-    let text = await response.text();
-
-    console.log("الرد الخام:", text);
-
-    try{
-
-        return JSON.parse(text);
-
-    }catch(e){
-
-        throw new Error(text);
-
-    }
-
-})
 
 .then(function(response){
 
-    debug("4️⃣ تم استلام الرد من الخادم");
 
 if(response.success){
 
-    debug("✅ " + response.data);
+
+result.innerHTML =
+response.data;
+
 
 }else{
 
-    debug("❌ " + response.error);
+
+result.innerHTML =
+"❌ " + response.error;
+
 
 }
+
+
 })
 
 
 .catch(function(error){
 
+
 console.error(error);
+
 
 result.innerHTML =
 "❌ حدث خطأ أثناء التسجيل";
+
 
 });
 
@@ -674,7 +684,9 @@ result.innerHTML =
 
 
 
-// تسجيل موظف مؤقت
+
+
+// اختيار موظف مؤقت
 
 function sendTemporary(){
 
@@ -684,9 +696,7 @@ document.getElementById("temporaryWorker");
 
 
 
-if(
-tempSelect.style.display=="none"
-){
+if(tempSelect.style.display=="none"){
 
 
 tempSelect.innerHTML="";
@@ -728,6 +738,7 @@ tempSelect.appendChild(newOption);
 
 }
 
+
 }
 
 
@@ -748,7 +759,6 @@ return;
 
 
 temporaryEmployee={
-
 
 id:
 tempSelect.value,
@@ -777,6 +787,8 @@ document.getElementById("tempActionBox")
 
 
 
+
+
 function chooseTemporary(action){
 
 
@@ -786,6 +798,9 @@ document.getElementById("tempActionBox")
 
 
 if(!temporaryEmployee){
+
+document.getElementById("result").innerHTML =
+"اختر الموظف أولاً";
 
 return;
 
@@ -798,26 +813,15 @@ document.getElementById("result");
 
 
 result.innerHTML =
-"⏳ جاري التسجيل...";
+"⏳ جاري التسجيل المؤقت...";
 
 
 
-getCurrentLocation(function(latitude, longitude){
+getCurrentLocation(function(latitude,longitude){
 
 
 
-fetch(API_URL,{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":"text/plain"
-
-},
-
-
-body:JSON.stringify({
+callAPI({
 
 action:"saveAttendance",
 
@@ -839,28 +843,35 @@ registrationType:"مؤقت"
 
 })
 
-})
-
-
-.then(response=>response.json())
-
 
 .then(function(response){
 
-result.innerHTML = response.data;
+
+if(response.success){
+
+result.innerHTML =
+response.data;
+
+}else{
+
+result.innerHTML =
+"❌ " + response.error;
+
+}
+
 
 })
 
+
 .catch(function(error){
+
 
 console.error(error);
 
-debug(
-"❌ " +
-error.name +
-" : " +
-error.message
-);
+
+result.innerHTML =
+"❌ حدث خطأ أثناء التسجيل المؤقت";
+
 
 });
 
@@ -869,7 +880,6 @@ error.message
 
 
 }
-
 
 </script>
 
