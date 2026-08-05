@@ -347,7 +347,7 @@ let employeesList = [];
 
 let temporaryEmployee = null;
 
-
+let isSending = false;
 
 
 // دالة اتصال موحدة مع Apps Script
@@ -597,7 +597,11 @@ document.getElementById("result").innerHTML =
 // تسجيل الدخول والخروج
 
 function send(action){
+if(isSending){
+    return;
+}
 
+isSending = true;
 
 let result =
 document.getElementById("result");
@@ -655,7 +659,7 @@ result.innerHTML =
 
 
 }
-
+isSending = false;
 
 })
 
@@ -668,7 +672,7 @@ console.error(error);
 
 result.innerHTML =
 "❌ حدث خطأ أثناء التسجيل";
-
+isSending = false;
 
 });
 
@@ -791,6 +795,11 @@ document.getElementById("tempActionBox")
 
 function chooseTemporary(action){
 
+if(isSending){
+    return;
+}
+
+isSending = true;
 
 document.getElementById("tempActionBox")
 .style.display="none";
@@ -859,6 +868,8 @@ result.innerHTML =
 
 }
 
+isSending = false;
+
 
 })
 
@@ -872,7 +883,7 @@ console.error(error);
 result.innerHTML =
 "❌ حدث خطأ أثناء التسجيل المؤقت";
 
-
+isSending = false;
 });
 
 
