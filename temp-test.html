@@ -2,36 +2,29 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>اختبار التسجيل المؤقت</title>
+  <title>التسجيل المؤقت</title>
 </head>
 
 <body>
 
-  <h3>اختبار التسجيل المؤقت</h3>
+<script>
 
-  <button onclick="openTemporary()">
-    فتح التسجيل المؤقت
-  </button>
+const params =
+new URLSearchParams(window.location.search);
 
-  <script>
+const centerId =
+params.get("center") || "";
 
-    function openTemporary() {
+const url =
+"https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLNPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec"
++
+"?center="
++
+encodeURIComponent(centerId);
 
-      const centerId =
-        new URLSearchParams(window.location.search)
-        .get("center") || "";
+window.location.replace(url);
 
-      const url =
-        "https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLNPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec"
-        + "?center="
-        + encodeURIComponent(centerId)
-        + "&temp=1";
-
-      window.location.href = url;
-
-    }
-
-  </script>
+</script>
 
 </body>
 </html>
