@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>إدارة نظام حضور الموظفين</title>
+
+  <title>لوحة إدارة الحضور</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  >
 
   <style>
+    :root {
+      --qatar: #8a1538;
+      --qatar-dark: #64102a;
+      --background: #f7f2f4;
+      --border: #eadde2;
+      --danger: #c92d43;
+      --success: #14804a;
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -13,200 +29,419 @@
     body {
       margin: 0;
       min-height: 100vh;
-      padding: 20px;
+      color: #30252a;
       font-family: "Cairo", Arial, sans-serif;
-      background: linear-gradient(135deg, #e8f5e9, #e3f2fd);
+      background: var(--background);
+    }
+
+    header {
+      padding: 18px 5%;
+      color: white;
+      background: linear-gradient(
+        135deg,
+        var(--qatar),
+        var(--qatar-dark)
+      );
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      box-shadow: 0 8px 24px rgba(100, 16, 42, 0.2);
     }
 
-    .card {
-      width: 100%;
-      max-width: 500px;
-      padding: 30px;
-      background: #fff;
-      border-top: 6px solid #1976d2;
-      border-radius: 25px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
-    h1 {
-      color: #1565c0;
-      font-size: 26px;
-      text-align: center;
+    .flag {
+      font-size: 34px;
     }
 
-    h3 {
-      margin-top: 25px;
-      color: #2e7d32;
-    }
-
-    label {
+    .brand strong {
       display: block;
-      margin-top: 15px;
-      color: #444;
+      font-size: 20px;
+    }
+
+    .brand small {
+      display: block;
+      opacity: 0.8;
+    }
+
+    .container {
+      width: min(1160px, 94%);
+      margin: 26px auto;
+    }
+
+    .toolbar,
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar {
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      color: var(--qatar-dark);
+    }
+
+    button,
+    .button {
+      padding: 10px 15px;
+      font-family: inherit;
       font-weight: 700;
-    }
-
-    input,
-    textarea {
-      width: 100%;
-      margin-top: 8px;
-      padding: 12px;
-      font-size: 15px;
-      font-family: inherit;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-    }
-
-    textarea {
-      height: 120px;
-      resize: vertical;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 25px;
-      padding: 15px;
-      color: #fff;
-      font-size: 18px;
-      font-family: inherit;
-      background: #1976d2;
+      text-decoration: none;
       border: 0;
-      border-radius: 15px;
+      border-radius: 11px;
       cursor: pointer;
     }
 
-    button:hover:not(:disabled) {
-      background: #0d47a1;
+    .primary {
+      color: white;
+      background: var(--qatar);
+    }
+
+    .secondary {
+      color: var(--qatar);
+      background: white;
+      border: 1px solid var(--border);
+    }
+
+    .danger {
+      color: white;
+      background: var(--danger);
     }
 
     button:disabled {
       cursor: wait;
-      opacity: 0.65;
+      opacity: 0.55;
     }
 
-    #result {
-      margin-top: 20px;
-      text-align: center;
-      color: #2e7d32;
-      font-weight: 700;
-      white-space: pre-wrap;
+    .stats {
+      margin-bottom: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
     }
 
-    #result.error {
-      color: #c62828;
+    .stat,
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(100, 16, 42, 0.05);
     }
 
-    .result-link {
-      width: 100%;
-      margin-top: 12px;
-      padding: 10px;
-      direction: ltr;
-      text-align: left;
+    .stat {
+      padding: 18px;
     }
 
-    .qr-image {
+    .stat span {
+      color: #75666c;
+      font-size: 13px;
+    }
+
+    .stat strong {
       display: block;
-      width: 250px;
-      max-width: 100%;
-      height: auto;
-      margin: 10px auto 0;
+      color: var(--qatar);
+      font-size: 28px;
     }
 
-    .hint {
-      color: #555;
-      font-size: 14px;
-      font-weight: 400;
+    .panel {
+      overflow: hidden;
     }
 
-    #copyBtn {
+    .panel-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    input,
+    select {
+      padding: 10px 12px;
+      font-family: inherit;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--qatar);
+      box-shadow: 0 0 0 3px rgba(138, 21, 56, 0.09);
+    }
+
+    .table-wrap {
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 750px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 13px 15px;
+      text-align: right;
+      border-bottom: 1px solid #f1e8eb;
+    }
+
+    th {
+      color: #75666c;
+      font-size: 13px;
+      background: #fcfafb;
+    }
+
+    .actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .small {
+      padding: 7px 10px;
+      font-size: 12px;
+    }
+
+    .empty {
+      padding: 35px;
+      color: #75666c;
+      text-align: center;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      padding: 18px;
+      background: rgba(47, 17, 27, 0.6);
       display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .dialog {
+      width: min(450px, 100%);
+      padding: 23px;
+      background: white;
+      border-radius: 20px;
+    }
+
+    .dialog h3 {
+      color: var(--qatar);
+    }
+
+    .field {
+      margin: 13px 0;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .field select {
+      width: 100%;
+    }
+
+    .dialog-actions {
+      margin-top: 19px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .dialog-actions button {
+      flex: 1;
+    }
+
+    #message {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      z-index: 20;
+      max-width: 360px;
+      padding: 12px 16px;
+      color: white;
+      background: var(--success);
+      border-radius: 11px;
+      display: none;
+    }
+
+    #message.error {
+      background: var(--danger);
+    }
+
+    @media (max-width: 700px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar .button,
+      .panel-head input {
+        width: 100%;
+      }
+
+      .brand strong {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <main class="card">
-    <h1>إدارة نظام حضور الموظفين</h1>
 
-    <form id="centerForm" novalidate>
-      <h3>🏫 إضافة مركز جديد</h3>
+  <header>
+    <div class="brand">
+      <span class="flag">🇶🇦</span>
 
-      <label for="centerName">اسم المركز</label>
-      <input
-        id="centerName"
-        name="centerName"
-        autocomplete="organization"
-        required
-      >
+      <div>
+        <strong>لوحة إدارة الحضور والانصراف</strong>
+        <small>مراكز التحفيظ</small>
+      </div>
+    </div>
 
-      <label for="location">
-        رابط الموقع من خرائط Google أو الإحداثيات
-      </label>
-      <input
-        id="location"
-        name="location"
-        dir="ltr"
-        required
-      >
-
-      <h3>👤 بيانات المدير</h3>
-
-      <label for="manager">اسم المدير</label>
-      <input
-        id="manager"
-        name="manager"
-        autocomplete="name"
-      >
-
-      <label for="email">البريد الإلكتروني</label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        autocomplete="email"
-      >
-
-      <label for="whatsapp">رقم واتساب</label>
-      <input
-        id="whatsapp"
-        name="whatsapp"
-        type="tel"
-        autocomplete="tel"
-        dir="ltr"
-      >
-
-      <h3>👨‍🏫 الموظفون</h3>
-
-      <label for="employees">
-        أدخل بيانات الموظفين (كل موظف في سطر)
-        <br>
-        الصيغة: رقم الموظف, الاسم, الوظيفة
-      </label>
-
-      <textarea
-        id="employees"
-        name="employees"
-        required
-      ></textarea>
-
-      <button id="submitBtn" type="submit">
-        إضافة المركز
-      </button>
-    </form>
-
-    <div
-      id="result"
-      role="status"
-      aria-live="polite"
-    ></div>
-
-    <button id="copyBtn" type="button">
-      نسخ الرابط
+    <button
+      type="button"
+      class="secondary"
+      onclick="loadDashboard()">
+      ↻ تحديث
     </button>
+  </header>
+
+  <main class="container">
+
+    <div class="toolbar">
+      <h2>إدارة المراكز</h2>
+
+      <a
+        id="addLink"
+        class="button primary">
+        ＋ إضافة مركز جديد
+      </a>
+    </div>
+
+    <section class="stats">
+
+      <article class="stat">
+        <span>عدد المراكز</span>
+        <strong id="centersCount">—</strong>
+      </article>
+
+      <article class="stat">
+        <span>عدد الموظفين</span>
+        <strong id="employeesCount">—</strong>
+      </article>
+
+      <article class="stat">
+        <span>الأجهزة المرتبطة</span>
+        <strong id="devicesCount">—</strong>
+      </article>
+
+    </section>
+
+    <section class="panel">
+
+      <div class="panel-head">
+        <strong>قائمة المراكز</strong>
+
+        <input
+          id="search"
+          type="search"
+          placeholder="بحث باسم أو رقم المركز"
+        >
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>رقم المركز</th>
+              <th>اسم المركز</th>
+              <th>المدير</th>
+              <th>الموظفون</th>
+              <th>واتساب</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+
+          <tbody id="centersBody">
+            <tr>
+              <td colspan="6" class="empty">
+                جاري تحميل البيانات...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
   </main>
+
+  <div id="deviceModal" class="modal">
+
+    <div class="dialog">
+
+      <h3>مسح ربط جهاز موظف</h3>
+
+      <p>
+        بعد المسح يستطيع الموظف ربط هاتفه الجديد
+        عند أول تسجيل.
+      </p>
+
+      <div class="field">
+        <label for="deviceCenter">المركز</label>
+
+        <select id="deviceCenter">
+          <option value="">اختر المركز</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="deviceEmployee">الموظف</label>
+
+        <select id="deviceEmployee">
+          <option value="">اختر المركز أولًا</option>
+        </select>
+      </div>
+
+      <div class="dialog-actions">
+
+        <button
+          id="clearBtn"
+          type="button"
+          class="danger"
+          onclick="clearDevice()">
+          مسح الجوال
+        </button>
+
+        <button
+          type="button"
+          class="secondary"
+          onclick="closeModal()">
+          إلغاء
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="message" role="status"></div>
 
   <script>
     "use strict";
@@ -214,126 +449,23 @@
     const API_URL =
       "https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec";
 
-    const form =
-      document.getElementById("centerForm");
+    let centers = [];
 
-    const submitButton =
-      document.getElementById("submitBtn");
+    function formUrl(centerId = "") {
+      const url = "center-form.html";
 
-    const copyButton =
-      document.getElementById("copyBtn");
+      if (!centerId) {
+        return url;
+      }
 
-    const resultElement =
-      document.getElementById("result");
-
-    let isSubmitting = false;
-    let createdCenterLink = "";
-
-    function setMessage(message, isError) {
-      resultElement.replaceChildren();
-      resultElement.textContent = message;
-
-      resultElement.classList.toggle(
-        "error",
-        Boolean(isError)
+      return (
+        url +
+        "?center=" +
+        encodeURIComponent(centerId)
       );
     }
 
-    function setSubmitting(value) {
-      isSubmitting = value;
-      submitButton.disabled = value;
-
-      submitButton.textContent = value
-        ? "⏳ جاري إضافة المركز..."
-        : "إضافة المركز";
-    }
-
-    function readFormData() {
-      return {
-        centerName:
-          document
-            .getElementById("centerName")
-            .value
-            .trim(),
-
-        location:
-          document
-            .getElementById("location")
-            .value
-            .trim(),
-
-        manager:
-          document
-            .getElementById("manager")
-            .value
-            .trim(),
-
-        email:
-          document
-            .getElementById("email")
-            .value
-            .trim(),
-
-        whatsapp:
-          document
-            .getElementById("whatsapp")
-            .value
-            .trim(),
-
-        employees:
-          document
-            .getElementById("employees")
-            .value
-            .trim()
-      };
-    }
-
-    function validateData(data) {
-      if (!data.centerName) {
-        return "أدخل اسم المركز";
-      }
-
-      if (!data.location) {
-        return "أدخل رابط الموقع أو الإحداثيات";
-      }
-
-      if (!data.employees) {
-        return "أدخل بيانات موظف واحد على الأقل";
-      }
-
-      const lines = data.employees
-        .split(/\r?\n/)
-        .map(function (line) {
-          return line.trim();
-        })
-        .filter(Boolean);
-
-      for (
-        let index = 0;
-        index < lines.length;
-        index += 1
-      ) {
-        const parts = lines[index].split(",");
-
-        if (
-          parts.length < 2 ||
-          !parts[0].trim() ||
-          !parts[1].trim()
-        ) {
-          return (
-            "صيغة الموظف في السطر " +
-            (index + 1) +
-            " غير صحيحة"
-          );
-        }
-      }
-
-      return "";
-    }
-
     async function callAPI(data) {
-      console.log("ADMIN API DATA:", data);
-
       const response = await fetch(API_URL, {
         method: "POST",
 
@@ -350,27 +482,13 @@
       });
 
       const text = await response.text();
-      const trimmedText = text.trim();
-
-      console.log("API status:", response.status);
-      console.log("API final URL:", response.url);
-      console.log("API response:", text);
-
-      if (!response.ok) {
-        throw new Error(
-          "فشل الاتصال بالخادم: HTTP " +
-          response.status
-        );
-      }
 
       if (
-        trimmedText.startsWith("<!DOCTYPE") ||
-        trimmedText
-          .toLowerCase()
-          .startsWith("<html")
+        !response.ok ||
+        /^\s*</.test(text)
       ) {
         throw new Error(
-          "عاد الخادم بصفحة HTML بدل JSON"
+          "تعذر الاتصال بالخادم"
         );
       }
 
@@ -384,218 +502,396 @@
         );
       }
 
-      if (
-        !result ||
-        typeof result.success !== "boolean"
-      ) {
-        throw new Error(
-          "بنية استجابة الخادم غير صحيحة"
-        );
-      }
-
       if (!result.success) {
         throw new Error(
           result.error ||
-          "تعذر تنفيذ العملية"
+          "فشلت العملية"
         );
       }
 
-      return result;
+      return result.data;
     }
 
-    function showSuccess(center) {
-      resultElement.replaceChildren();
-      resultElement.classList.remove("error");
+    function notify(text, error = false) {
+      const message =
+        document.getElementById("message");
 
-      const heading =
-        document.createElement("h3");
+      message.textContent = text;
 
-      heading.textContent =
-        "تم إضافة المركز بنجاح ✅";
+      message.className =
+        error ? "error" : "";
 
-      const idParagraph =
-        document.createElement("p");
+      message.style.display = "block";
 
-      idParagraph.append("رقم المركز: ");
+      clearTimeout(notify.timer);
 
-      const idValue =
-        document.createElement("b");
-
-      idValue.textContent =
-        String(center.id);
-
-      idParagraph.appendChild(idValue);
-
-      const qrTitle =
-        document.createElement("p");
-
-      qrTitle.textContent = "كود الحضور:";
-
-      const qrImage =
-        document.createElement("img");
-
-      qrImage.className = "qr-image";
-
-      qrImage.alt =
-        "رمز QR لصفحة المركز";
-
-      qrImage.src =
-        "https://quickchart.io/qr?size=1000&text=" +
-        encodeURIComponent(center.link);
-
-      const hint =
-        document.createElement("p");
-
-      hint.className = "hint";
-
-      hint.textContent =
-        "استخدم هذا الكود للدخول إلى صفحة تسجيل حضور المركز " +
-        "(اضغط مطولًا على الصورة لتنزيلها)";
-
-      const linkInput =
-        document.createElement("input");
-
-      linkInput.id = "centerLink";
-      linkInput.className = "result-link";
-      linkInput.value = center.link;
-      linkInput.readOnly = true;
-
-      resultElement.append(
-        heading,
-        idParagraph,
-        qrTitle,
-        qrImage,
-        hint,
-        linkInput
+      notify.timer = setTimeout(
+        function () {
+          message.style.display = "none";
+        },
+        4000
       );
-
-      createdCenterLink = center.link;
-
-      copyButton.style.display = "block";
-      copyButton.textContent = "نسخ الرابط";
     }
 
-    async function addCenter(event) {
-      event.preventDefault();
-
-      if (isSubmitting) {
-        return;
-      }
-
-      const data = readFormData();
-
-      const validationError =
-        validateData(data);
-
-      if (validationError) {
-        setMessage(
-          "⚠️ " + validationError,
-          true
+    function renderCenters(list) {
+      const body =
+        document.getElementById(
+          "centersBody"
         );
+
+      body.replaceChildren();
+
+      if (!list.length) {
+        body.innerHTML = `
+          <tr>
+            <td colspan="6" class="empty">
+              لا توجد مراكز
+            </td>
+          </tr>
+        `;
 
         return;
       }
 
-      setSubmitting(true);
+      list.forEach(function (center) {
+        const row =
+          document.createElement("tr");
 
-      copyButton.style.display = "none";
+        const values = [
+          center.id,
+          center.name,
+          center.manager || "—",
+          center.employeeCount || 0,
+          center.whatsapp || "—"
+        ];
 
-      createdCenterLink = "";
+        values.forEach(function (value) {
+          const cell =
+            document.createElement("td");
 
-      setMessage(
-        "⏳ جاري إضافة المركز...",
-        false
-      );
-
-      try {
-        const result = await callAPI({
-          action: "addNewCenter",
-          centerName: data.centerName,
-          location: data.location,
-          manager: data.manager,
-          email: data.email,
-          whatsapp: data.whatsapp,
-          employees: data.employees
+          cell.textContent = value;
+          row.appendChild(cell);
         });
 
-        if (
-          !result.data ||
-          !result.data.id ||
-          !result.data.link
-        ) {
-          throw new Error(
-            "لم يُرجع الخادم بيانات المركز الجديد"
-          );
-        }
+        const actionsCell =
+          document.createElement("td");
 
-        showSuccess(result.data);
+        const actions =
+          document.createElement("div");
+
+        actions.className = "actions";
+
+        const editLink =
+          document.createElement("a");
+
+        editLink.className =
+          "button secondary small";
+
+        editLink.textContent = "تعديل";
+
+        editLink.href =
+          formUrl(center.id);
+
+        const deviceButton =
+          document.createElement("button");
+
+        deviceButton.type = "button";
+
+        deviceButton.className =
+          "secondary small";
+
+        deviceButton.textContent =
+          "مسح جوال";
+
+        deviceButton.onclick =
+          function () {
+            openDeviceModal(center.id);
+          };
+
+        actions.append(
+          editLink,
+          deviceButton
+        );
+
+        actionsCell.appendChild(actions);
+        row.appendChild(actionsCell);
+        body.appendChild(row);
+      });
+    }
+
+    async function loadDashboard() {
+      try {
+        const data = await callAPI({
+          action: "getAdminDashboard"
+        });
+
+        centers = data.centers || [];
+
+        document
+          .getElementById("centersCount")
+          .textContent =
+            data.centersCount || 0;
+
+        document
+          .getElementById("employeesCount")
+          .textContent =
+            data.employeesCount || 0;
+
+        document
+          .getElementById("devicesCount")
+          .textContent =
+            data.devicesCount || 0;
+
+        renderCenters(centers);
+        fillCenterSelect();
+
       } catch (error) {
-        console.error(
-          "Add center failed:",
-          error
-        );
+        document
+          .getElementById("centersBody")
+          .innerHTML = `
+            <tr>
+              <td colspan="6" class="empty">
+                تعذر تحميل البيانات
+              </td>
+            </tr>
+          `;
 
-        setMessage(
-          "❌ تعذر إضافة المركز. " +
-          (
-            error && error.message
-              ? error.message
-              : "حاول مرة أخرى"
-          ),
-          true
-        );
-      } finally {
-        setSubmitting(false);
+        notify(error.message, true);
       }
     }
 
-    async function copyLink() {
-      if (!createdCenterLink) {
-        setMessage(
-          "⚠️ لا يوجد رابط لنسخه",
+    function fillCenterSelect() {
+      const select =
+        document.getElementById(
+          "deviceCenter"
+        );
+
+      select.replaceChildren(
+        new Option(
+          "اختر المركز",
+          ""
+        )
+      );
+
+      centers.forEach(function (center) {
+        select.add(
+          new Option(
+            center.name +
+            " - " +
+            center.id,
+
+            center.id
+          )
+        );
+      });
+    }
+
+    async function loadEmployees() {
+      const centerSelect =
+        document.getElementById(
+          "deviceCenter"
+        );
+
+      const employeeSelect =
+        document.getElementById(
+          "deviceEmployee"
+        );
+
+      const centerId =
+        centerSelect.value;
+
+      employeeSelect.replaceChildren(
+        new Option(
+          centerId
+            ? "جاري التحميل..."
+            : "اختر المركز أولًا",
+          ""
+        )
+      );
+
+      if (!centerId) {
+        return;
+      }
+
+      try {
+        const employees =
+          await callAPI({
+            action: "getEmployees",
+            centerId: centerId
+          });
+
+        employeeSelect.replaceChildren(
+          new Option(
+            "اختر الموظف",
+            ""
+          )
+        );
+
+        employees.forEach(
+          function (employee) {
+            employeeSelect.add(
+              new Option(
+                employee.name +
+                " - " +
+                employee.id,
+
+                employee.id
+              )
+            );
+          }
+        );
+
+      } catch (error) {
+        notify(error.message, true);
+      }
+    }
+
+    function openDeviceModal(centerId) {
+      const modal =
+        document.getElementById(
+          "deviceModal"
+        );
+
+      const centerSelect =
+        document.getElementById(
+          "deviceCenter"
+        );
+
+      modal.classList.add("open");
+      centerSelect.value = centerId || "";
+
+      loadEmployees();
+    }
+
+    function closeModal() {
+      document
+        .getElementById("deviceModal")
+        .classList
+        .remove("open");
+    }
+
+    async function clearDevice() {
+      const centerId =
+        document
+          .getElementById(
+            "deviceCenter"
+          )
+          .value;
+
+      const employeeId =
+        document
+          .getElementById(
+            "deviceEmployee"
+          )
+          .value;
+
+      const button =
+        document.getElementById(
+          "clearBtn"
+        );
+
+      if (!centerId || !employeeId) {
+        notify(
+          "اختر المركز والموظف أولًا",
           true
         );
 
         return;
       }
 
+      const confirmed = confirm(
+        "هل تريد مسح الجهاز المرتبط بهذا الموظف؟"
+      );
+
+      if (!confirmed) {
+        return;
+      }
+
+      button.disabled = true;
+
       try {
-        await navigator.clipboard.writeText(
-          createdCenterLink
+        const result =
+          await callAPI({
+            action:
+              "clearEmployeeDevice",
+
+            centerId: centerId,
+
+            employeeId: employeeId
+          });
+
+        notify(
+          result.message ||
+          "تم مسح ربط الجوال"
         );
 
-        copyButton.textContent =
-          "تم النسخ ✅";
+        closeModal();
+        loadDashboard();
+
       } catch (error) {
-        const linkInput =
-          document.getElementById(
-            "centerLink"
-          );
+        notify(error.message, true);
 
-        if (linkInput) {
-          linkInput.focus();
-          linkInput.select();
-
-          linkInput.setSelectionRange(
-            0,
-            linkInput.value.length
-          );
-        }
-
-        copyButton.textContent =
-          "حدد الرابط؛ انسخه يدويًا";
+      } finally {
+        button.disabled = false;
       }
     }
 
-    form.addEventListener(
-      "submit",
-      addCenter
-    );
+    document
+      .getElementById("deviceCenter")
+      .addEventListener(
+        "change",
+        loadEmployees
+      );
 
-    copyButton.addEventListener(
-      "click",
-      copyLink
-    );
+    document
+      .getElementById("search")
+      .addEventListener(
+        "input",
+        function (event) {
+          const query =
+            event.target.value
+              .trim()
+              .toLowerCase();
+
+          const filtered =
+            centers.filter(
+              function (center) {
+                return (
+                  String(center.id)
+                    .toLowerCase()
+                    .includes(query) ||
+
+                  String(center.name)
+                    .toLowerCase()
+                    .includes(query)
+                );
+              }
+            );
+
+          renderCenters(filtered);
+        }
+      );
+
+    document
+      .getElementById("deviceModal")
+      .addEventListener(
+        "click",
+        function (event) {
+          if (
+            event.target.id ===
+            "deviceModal"
+          ) {
+            closeModal();
+          }
+        }
+      );
+
+    document
+      .getElementById("addLink")
+      .href = formUrl();
+
+    loadDashboard();
   </script>
+
 </body>
 </html>
