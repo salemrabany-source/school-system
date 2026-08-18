@@ -1,479 +1,601 @@
 <!DOCTYPE html>
-<html dir="rtl">
-
+<html lang="ar" dir="rtl">
 <head>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
-
-body {
-
-  margin:0;
-
-  min-height:100vh;
-
-  font-family:'Cairo', Arial, sans-serif;
-
-  background:linear-gradient(
-    135deg,
-    #e8f5e9,
-    #e3f2fd
-  );
-
-  display:flex;
-
-  justify-content:center;
-
-  align-items:center;
-
-  padding:20px;
-
-}
-
-
-
-.card {
-
-  width:100%;
-
-  max-width:500px;
-
-  background:white;
-
-  border-radius:25px;
-
-  padding:30px;
-
-  box-shadow:
-  0 10px 30px rgba(0,0,0,0.15);
-
-  border-top:6px solid #1976d2;
-
-}
-
-
-
-h1 {
-
- text-align:center;
-
- color:#1565c0;
-
- font-size:26px;
-
-}
-
-
-
-h3 {
-
- color:#2e7d32;
-
- margin-top:25px;
-
-}
-
-
-
-label {
-
- display:block;
-
- margin-top:15px;
-
- color:#444;
-
- font-weight:bold;
-
-}
-
-
-
-input, textarea {
-
- width:100%;
-
- padding:12px;
-
- margin-top:8px;
-
- border-radius:12px;
-
- border:1px solid #ddd;
-
- box-sizing:border-box;
-
- font-size:15px;
-
-}
-
-
-
-textarea {
-
- height:120px;
-
- resize:none;
-
-}
-
-
-
-button {
-
- width:100%;
-
- margin-top:25px;
-
- padding:15px;
-
- border:none;
-
- border-radius:15px;
-
- background:#1976d2;
-
- color:white;
-
- font-size:18px;
-
- cursor:pointer;
-
-}
-
-
-
-button:hover {
-
- background:#0d47a1;
-
-}
-
-
-
-#result {
-
- margin-top:20px;
-
- text-align:center;
-
- color:#2e7d32;
-
- font-weight:bold;
-
-}
-
-
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>إدارة نظام حضور الموظفين</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 20px;
+      font-family: "Cairo", Arial, sans-serif;
+      background: linear-gradient(135deg, #e8f5e9, #e3f2fd);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 500px;
+      padding: 30px;
+      background: #fff;
+      border-top: 6px solid #1976d2;
+      border-radius: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    h1 {
+      color: #1565c0;
+      font-size: 26px;
+      text-align: center;
+    }
+
+    h3 {
+      margin-top: 25px;
+      color: #2e7d32;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      color: #444;
+      font-weight: 700;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      margin-top: 8px;
+      padding: 12px;
+      font-size: 15px;
+      font-family: inherit;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+    }
+
+    textarea {
+      height: 120px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 15px;
+      color: #fff;
+      font-size: 18px;
+      font-family: inherit;
+      background: #1976d2;
+      border: 0;
+      border-radius: 15px;
+      cursor: pointer;
+    }
+
+    button:hover:not(:disabled) {
+      background: #0d47a1;
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.65;
+    }
+
+    #result {
+      margin-top: 20px;
+      text-align: center;
+      color: #2e7d32;
+      font-weight: 700;
+      white-space: pre-wrap;
+    }
+
+    #result.error {
+      color: #c62828;
+    }
+
+    .result-link {
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .qr-image {
+      display: block;
+      width: 250px;
+      max-width: 100%;
+      height: auto;
+      margin: 10px auto 0;
+    }
+
+    .hint {
+      color: #555;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    #copyBtn {
+      display: none;
+    }
+  </style>
 </head>
 
-
 <body>
-
-
-<div class="card">
-
-
-<h1>
-إدارة نظام حضور الموظفين
-</h1>
-
-
-
-<h3>
-🏫 إضافة مركز جديد
-</h3>
-
-
-
-<label>
-اسم المركز
-</label>
-
-<input id="centerName">
-
-
-
-<label>
-رابط الموقع من خرائط Google
-</label>
-
-<input id="location">
-
-
-
-
-
-<h3>
-👤 بيانات المدير
-</h3>
-
-
-
-<label>
-اسم المدير
-</label>
-
-<input id="manager">
-
-
-
-<label>
-البريد الإلكتروني
-</label>
-
-<input id="email">
-
-
-
-<label>
-رقم واتساب
-</label>
-
-<input id="whatsapp">
-
-
-
-
-
-<h3>
-👨‍🏫 الموظفون
-</h3>
-
-
-
-<label>
-أدخل بيانات الموظفين (كل موظف في سطر)
-<br>
-الصيغة:
-<br>
-رقم الموظف, الاسم, الوظيفة
-</label>
-
-
-<textarea id="employees"></textarea>
-
-
-
-
-
-<button onclick="addCenter()">
-
-إضافة المركز
-
-</button>
-
-
-
-
-<div id="result"></div>
-
-
-
-<button id="copyBtn"
-style="display:none;"
-onclick="copyLink()">
-
-نسخ الرابط
-
-</button>
-
-
-
-
-</div>
-
-
-<script>
-function addCenter(){
-
-
-let data = {
-
-
-  centerName:
-  document.getElementById("centerName").value,
-
-
-  location:
-  document.getElementById("location").value,
-
-
-  manager:
-  document.getElementById("manager").value,
-
-
-  email:
-  document.getElementById("email").value,
-
-
-  whatsapp:
-  document.getElementById("whatsapp").value,
-
-
-  employees:
-  document.getElementById("employees").value
-
-
-};
-
-
-
-
-fetch("https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec", {
-
-
-  method: "POST",
-
-
- headers: {
- "Content-Type": "text/plain"
-},
-
-
-  body: JSON.stringify({
-
-    action: "addNewCenter",
-
-    centerName: data.centerName,
-
-    location: data.location,
-
-    manager: data.manager,
-
-    email: data.email,
-
-    whatsapp: data.whatsapp,
-
-    employees: data.employees
-
-  })
-
-
-})
-
-
-.then(response => response.json())
-
-
-.then(result => {
-
-let html = `
-
-
-<h3>
-تم إضافة المركز بنجاح ✅
-</h3>
-
-
-<p>
-رقم المركز:
-<b>${result.data.id}</b>
-</p>
-
-
-<p>
-كود الحضور:
-</p>
-
-<img 
-src="https://quickchart.io/qr?size=1000&text=${encodeURIComponent(result.data.link)}"
-width="250"
-style="margin-top:10px;"
->
-
-<p style="color:#555;font-size:14px;">
-استخدم هذا الكود للدخول إلى صفحة تسجيل حضور المركز (اضغط مطولا على الصورة لتنزيلها)
-</p>
-
-<input
-
-id="centerLink"
-
-value="${result.data.link}"
-
-readonly
-style="
-
-width:100%;
-
-padding:10px;
-
-direction:ltr;
-
-"
-
-> 
-`;
-
-document.getElementById("result")
-
-.innerHTML = html;
-
-document.getElementById("copyBtn")
-
-.style.display="block";
-
-
-
-})
-
-
-.catch(error => {
-
-
-console.error(error);
-
-
-alert("حدث الصفحة من فضلك");
-
-
-});
-
-
-
-}
-
-function copyLink(){
-
-
-
-let link =
-
-document.getElementById("centerLink");
-
-
-
-link.select();
-
-
-
-navigator.clipboard.writeText(
-
-link.value
-
-);
-
-
-
-
-
-document.getElementById("copyBtn")
-
-.innerHTML="تم النسخ ✅";
-
-
-
-}
-
-
-
-</script>
-
-
-
+  <main class="card">
+    <h1>إدارة نظام حضور الموظفين</h1>
+
+    <form id="centerForm" novalidate>
+      <h3>🏫 إضافة مركز جديد</h3>
+
+      <label for="centerName">اسم المركز</label>
+      <input
+        id="centerName"
+        name="centerName"
+        autocomplete="organization"
+        required
+      >
+
+      <label for="location">
+        رابط الموقع من خرائط Google أو الإحداثيات
+      </label>
+      <input
+        id="location"
+        name="location"
+        dir="ltr"
+        required
+      >
+
+      <h3>👤 بيانات المدير</h3>
+
+      <label for="manager">اسم المدير</label>
+      <input
+        id="manager"
+        name="manager"
+        autocomplete="name"
+      >
+
+      <label for="email">البريد الإلكتروني</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        autocomplete="email"
+      >
+
+      <label for="whatsapp">رقم واتساب</label>
+      <input
+        id="whatsapp"
+        name="whatsapp"
+        type="tel"
+        autocomplete="tel"
+        dir="ltr"
+      >
+
+      <h3>👨‍🏫 الموظفون</h3>
+
+      <label for="employees">
+        أدخل بيانات الموظفين (كل موظف في سطر)
+        <br>
+        الصيغة: رقم الموظف, الاسم, الوظيفة
+      </label>
+
+      <textarea
+        id="employees"
+        name="employees"
+        required
+      ></textarea>
+
+      <button id="submitBtn" type="submit">
+        إضافة المركز
+      </button>
+    </form>
+
+    <div
+      id="result"
+      role="status"
+      aria-live="polite"
+    ></div>
+
+    <button id="copyBtn" type="button">
+      نسخ الرابط
+    </button>
+  </main>
+
+  <script>
+    "use strict";
+
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec";
+
+    const form =
+      document.getElementById("centerForm");
+
+    const submitButton =
+      document.getElementById("submitBtn");
+
+    const copyButton =
+      document.getElementById("copyBtn");
+
+    const resultElement =
+      document.getElementById("result");
+
+    let isSubmitting = false;
+    let createdCenterLink = "";
+
+    function setMessage(message, isError) {
+      resultElement.replaceChildren();
+      resultElement.textContent = message;
+
+      resultElement.classList.toggle(
+        "error",
+        Boolean(isError)
+      );
+    }
+
+    function setSubmitting(value) {
+      isSubmitting = value;
+      submitButton.disabled = value;
+
+      submitButton.textContent = value
+        ? "⏳ جاري إضافة المركز..."
+        : "إضافة المركز";
+    }
+
+    function readFormData() {
+      return {
+        centerName:
+          document
+            .getElementById("centerName")
+            .value
+            .trim(),
+
+        location:
+          document
+            .getElementById("location")
+            .value
+            .trim(),
+
+        manager:
+          document
+            .getElementById("manager")
+            .value
+            .trim(),
+
+        email:
+          document
+            .getElementById("email")
+            .value
+            .trim(),
+
+        whatsapp:
+          document
+            .getElementById("whatsapp")
+            .value
+            .trim(),
+
+        employees:
+          document
+            .getElementById("employees")
+            .value
+            .trim()
+      };
+    }
+
+    function validateData(data) {
+      if (!data.centerName) {
+        return "أدخل اسم المركز";
+      }
+
+      if (!data.location) {
+        return "أدخل رابط الموقع أو الإحداثيات";
+      }
+
+      if (!data.employees) {
+        return "أدخل بيانات موظف واحد على الأقل";
+      }
+
+      const lines = data.employees
+        .split(/\r?\n/)
+        .map(function (line) {
+          return line.trim();
+        })
+        .filter(Boolean);
+
+      for (
+        let index = 0;
+        index < lines.length;
+        index += 1
+      ) {
+        const parts = lines[index].split(",");
+
+        if (
+          parts.length < 2 ||
+          !parts[0].trim() ||
+          !parts[1].trim()
+        ) {
+          return (
+            "صيغة الموظف في السطر " +
+            (index + 1) +
+            " غير صحيحة"
+          );
+        }
+      }
+
+      return "";
+    }
+
+    async function callAPI(data) {
+      console.log("ADMIN API DATA:", data);
+
+      const response = await fetch(API_URL, {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
+
+        body: JSON.stringify(data),
+
+        redirect: "follow",
+
+        cache: "no-store"
+      });
+
+      const text = await response.text();
+      const trimmedText = text.trim();
+
+      console.log("API status:", response.status);
+      console.log("API final URL:", response.url);
+      console.log("API response:", text);
+
+      if (!response.ok) {
+        throw new Error(
+          "فشل الاتصال بالخادم: HTTP " +
+          response.status
+        );
+      }
+
+      if (
+        trimmedText.startsWith("<!DOCTYPE") ||
+        trimmedText
+          .toLowerCase()
+          .startsWith("<html")
+      ) {
+        throw new Error(
+          "عاد الخادم بصفحة HTML بدل JSON"
+        );
+      }
+
+      let result;
+
+      try {
+        result = JSON.parse(text);
+      } catch (error) {
+        throw new Error(
+          "استجابة الخادم ليست JSON"
+        );
+      }
+
+      if (
+        !result ||
+        typeof result.success !== "boolean"
+      ) {
+        throw new Error(
+          "بنية استجابة الخادم غير صحيحة"
+        );
+      }
+
+      if (!result.success) {
+        throw new Error(
+          result.error ||
+          "تعذر تنفيذ العملية"
+        );
+      }
+
+      return result;
+    }
+
+    function showSuccess(center) {
+      resultElement.replaceChildren();
+      resultElement.classList.remove("error");
+
+      const heading =
+        document.createElement("h3");
+
+      heading.textContent =
+        "تم إضافة المركز بنجاح ✅";
+
+      const idParagraph =
+        document.createElement("p");
+
+      idParagraph.append("رقم المركز: ");
+
+      const idValue =
+        document.createElement("b");
+
+      idValue.textContent =
+        String(center.id);
+
+      idParagraph.appendChild(idValue);
+
+      const qrTitle =
+        document.createElement("p");
+
+      qrTitle.textContent = "كود الحضور:";
+
+      const qrImage =
+        document.createElement("img");
+
+      qrImage.className = "qr-image";
+
+      qrImage.alt =
+        "رمز QR لصفحة المركز";
+
+      qrImage.src =
+        "https://quickchart.io/qr?size=1000&text=" +
+        encodeURIComponent(center.link);
+
+      const hint =
+        document.createElement("p");
+
+      hint.className = "hint";
+
+      hint.textContent =
+        "استخدم هذا الكود للدخول إلى صفحة تسجيل حضور المركز " +
+        "(اضغط مطولًا على الصورة لتنزيلها)";
+
+      const linkInput =
+        document.createElement("input");
+
+      linkInput.id = "centerLink";
+      linkInput.className = "result-link";
+      linkInput.value = center.link;
+      linkInput.readOnly = true;
+
+      resultElement.append(
+        heading,
+        idParagraph,
+        qrTitle,
+        qrImage,
+        hint,
+        linkInput
+      );
+
+      createdCenterLink = center.link;
+
+      copyButton.style.display = "block";
+      copyButton.textContent = "نسخ الرابط";
+    }
+
+    async function addCenter(event) {
+      event.preventDefault();
+
+      if (isSubmitting) {
+        return;
+      }
+
+      const data = readFormData();
+
+      const validationError =
+        validateData(data);
+
+      if (validationError) {
+        setMessage(
+          "⚠️ " + validationError,
+          true
+        );
+
+        return;
+      }
+
+      setSubmitting(true);
+
+      copyButton.style.display = "none";
+
+      createdCenterLink = "";
+
+      setMessage(
+        "⏳ جاري إضافة المركز...",
+        false
+      );
+
+      try {
+        const result = await callAPI({
+          action: "addNewCenter",
+          centerName: data.centerName,
+          location: data.location,
+          manager: data.manager,
+          email: data.email,
+          whatsapp: data.whatsapp,
+          employees: data.employees
+        });
+
+        if (
+          !result.data ||
+          !result.data.id ||
+          !result.data.link
+        ) {
+          throw new Error(
+            "لم يُرجع الخادم بيانات المركز الجديد"
+          );
+        }
+
+        showSuccess(result.data);
+      } catch (error) {
+        console.error(
+          "Add center failed:",
+          error
+        );
+
+        setMessage(
+          "❌ تعذر إضافة المركز. " +
+          (
+            error && error.message
+              ? error.message
+              : "حاول مرة أخرى"
+          ),
+          true
+        );
+      } finally {
+        setSubmitting(false);
+      }
+    }
+
+    async function copyLink() {
+      if (!createdCenterLink) {
+        setMessage(
+          "⚠️ لا يوجد رابط لنسخه",
+          true
+        );
+
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(
+          createdCenterLink
+        );
+
+        copyButton.textContent =
+          "تم النسخ ✅";
+      } catch (error) {
+        const linkInput =
+          document.getElementById(
+            "centerLink"
+          );
+
+        if (linkInput) {
+          linkInput.focus();
+          linkInput.select();
+
+          linkInput.setSelectionRange(
+            0,
+            linkInput.value.length
+          );
+        }
+
+        copyButton.textContent =
+          "حدد الرابط؛ انسخه يدويًا";
+      }
+    }
+
+    form.addEventListener(
+      "submit",
+      addCenter
+    );
+
+    copyButton.addEventListener(
+      "click",
+      copyLink
+    );
+  </script>
 </body>
-
 </html>
