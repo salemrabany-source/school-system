@@ -2220,7 +2220,429 @@
     // تحميل البيانات مرة واحدة
 
     loadDashboard();
+/* ==================================
+   تحسين العرض على الأجهزة اللوحية
+   ================================== */
 
+@media (max-width: 900px) {
+
+  .container {
+    width: 96%;
+  }
+
+
+  .actions {
+    min-width: 230px;
+    flex-wrap: wrap;
+  }
+
+
+  .small {
+    min-height: 40px;
+  }
+
+}
+
+
+/* ==================================
+   تصميم صفحة الإدارة على الجوال
+   ================================== */
+
+@media (max-width: 700px) {
+
+  body {
+    font-size: 14px;
+  }
+
+
+  header {
+    padding: 14px;
+    align-items: flex-start;
+  }
+
+
+  .brand {
+    align-items: flex-start;
+  }
+
+
+  .flag {
+    font-size: 28px;
+  }
+
+
+  .brand strong {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+
+  .brand small {
+    font-size: 11px;
+  }
+
+
+  header > button {
+    padding: 8px 10px;
+    min-height: 42px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+
+  .container {
+    width: 100%;
+    margin: 16px auto;
+    padding: 0 12px;
+  }
+
+
+  .toolbar {
+    margin-bottom: 15px;
+  }
+
+
+  .toolbar h2 {
+    margin: 0;
+    font-size: 19px;
+  }
+
+
+  .toolbar .button {
+    width: auto;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+  /* بطاقات الإحصائيات */
+
+  .stats {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+    gap: 7px;
+    margin-bottom: 15px;
+  }
+
+
+  .stat {
+    padding: 12px 8px;
+    text-align: center;
+    border-radius: 14px;
+  }
+
+
+  .stat span {
+    min-height: 38px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+  .stat strong {
+    margin-top: 3px;
+    font-size: 22px;
+  }
+
+
+  /* مربع البحث */
+
+  .panel {
+    overflow: visible;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+
+  .panel-head {
+    margin-bottom: 12px;
+    padding: 14px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+  }
+
+
+  .panel-head strong {
+    width: 100%;
+    font-size: 16px;
+  }
+
+
+  .panel-head input {
+    width: 100%;
+    min-height: 45px;
+  }
+
+
+  /* تحويل جدول المراكز إلى بطاقات */
+
+  .table-wrap {
+    overflow: visible;
+  }
+
+
+  table {
+    width: 100%;
+    min-width: 0;
+    display: block;
+  }
+
+
+  thead {
+    display: none;
+  }
+
+
+  tbody {
+    width: 100%;
+    display: grid;
+    gap: 12px;
+  }
+
+
+  tbody tr {
+    width: 100%;
+    padding: 8px 14px 14px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow:
+      0 6px 18px
+      rgba(100, 16, 42, 0.06);
+
+    display: block;
+  }
+
+
+  tbody td {
+    width: 100%;
+    min-height: 43px;
+    padding: 9px 0;
+    border-bottom: 1px solid #f1e8eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+
+
+  tbody td::before {
+    color: #75666c;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+
+  tbody td:nth-child(1)::before {
+    content: "رقم المركز";
+  }
+
+
+  tbody td:nth-child(2)::before {
+    content: "اسم المركز";
+  }
+
+
+  tbody td:nth-child(3)::before {
+    content: "المدير";
+  }
+
+
+  tbody td:nth-child(4)::before {
+    content: "الموظفون";
+  }
+
+
+  tbody td:nth-child(5)::before {
+    content: "واتساب";
+  }
+
+
+  tbody td:nth-child(6)::before {
+    content: "الإجراءات";
+  }
+
+
+  tbody td:last-child {
+    padding-top: 12px;
+    border-bottom: 0;
+    display: block;
+  }
+
+
+  tbody td:last-child::before {
+    margin-bottom: 9px;
+    display: block;
+  }
+
+
+  /* معالجة رسالة التحميل وعدم وجود مراكز */
+
+  tbody td.empty {
+    padding: 25px 10px;
+    display: block;
+    text-align: center;
+  }
+
+
+  tbody td.empty::before {
+    content: "";
+    display: none;
+  }
+
+
+  /* أزرار الإجراءات */
+
+  .actions {
+    width: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+  }
+
+
+  .actions button,
+  .actions .button {
+    width: 100%;
+    min-height: 44px;
+    padding: 9px 6px;
+    font-size: 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    white-space: normal;
+  }
+
+
+  /* جعل الزر الأخير بعرض البطاقة */
+
+  .actions > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+
+  /* النوافذ المنبثقة */
+
+  .modal {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+
+  .dialog {
+    width: 100%;
+    max-height: 92vh;
+    padding: 20px 16px;
+    border-radius: 22px 22px 0 0;
+    overflow-y: auto;
+  }
+
+
+  .dialog h3 {
+    margin-top: 0;
+    font-size: 18px;
+  }
+
+
+  .field select,
+  .dialog input {
+    width: 100%;
+    min-height: 47px;
+    font-size: 16px;
+  }
+
+
+  .dialog-actions {
+    position: sticky;
+    bottom: -20px;
+    padding: 12px 0 4px;
+    background: white;
+    flex-direction: column;
+  }
+
+
+  .dialog-actions button {
+    width: 100%;
+    min-height: 47px;
+  }
+
+
+  .qr-image {
+    width: 190px;
+  }
+
+
+  #message {
+    right: 12px;
+    left: 12px;
+    bottom: 12px;
+    max-width: none;
+    text-align: center;
+  }
+
+}
+
+
+/* ==================================
+   الشاشات الصغيرة جدًا
+   ================================== */
+
+@media (max-width: 380px) {
+
+  header {
+    gap: 7px;
+  }
+
+
+  .brand strong {
+    font-size: 13px;
+  }
+
+
+  .flag {
+    font-size: 24px;
+  }
+
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+
+  .stat span {
+    min-height: auto;
+  }
+
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+
+  .actions > * {
+    grid-column: 1;
+  }
+
+}
   </script>
 
 </body>
