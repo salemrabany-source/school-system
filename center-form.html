@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>بيانات المركز</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --qatar: #8a1538;
+      --qatar-dark: #64102a;
+      --background: #f7f2f4;
+      --border: #eadde2;
+      --danger: #c92d43;
+      --success: #14804a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 22px;
+      color: #30252a;
+      font-family: "Cairo", Arial, sans-serif;
+      background: var(--background);
+    }
+
+    .card {
+      width: min(680px, 100%);
+      margin: auto;
+      overflow: hidden;
+      background: white;
+      border-radius: 22px;
+      box-shadow: 0 15px 45px rgba(100, 16, 42, 0.11);
+    }
+
+    .page-header {
+      padding: 22px 26px;
+      color: white;
+      background: linear-gradient(
+        135deg,
+        var(--qatar),
+        var(--qatar-dark)
+      );
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .page-header h1 {
+      margin: 0;
+      font-size: 21px;
+    }
+
+    .back-link {
+      color: white;
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .body {
+      padding: 25px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 700;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      font-family: inherit;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      outline: none;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--qatar);
+      box-shadow: 0 0 0 3px rgba(138, 21, 56, 0.09);
+    }
+
+    input:read-only {
+      color: #76686d;
+      background: #f8f5f6;
+    }
+
+    textarea {
+      min-height: 160px;
+      line-height: 1.8;
+      resize: vertical;
+    }
+
+    .hint {
+      margin-top: 7px;
+      color: #74656b;
+      font-size: 12px;
+    }
+
+    .required {
+      color: var(--danger);
+    }
+
+    .actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+    }
+
+    button,
+    .button {
+      flex: 1;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      border: 0;
+      border-radius: 11px;
+      cursor: pointer;
+    }
+
+    .primary {
+      color: white;
+      background: var(--qatar);
+    }
+
+    .secondary {
+      color: var(--qatar);
+      background: white;
+      border: 1px solid var(--border);
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.55;
+    }
+
+    #message {
+      margin-top: 16px;
+      padding: 12px;
+      color: #16633b;
+      text-align: center;
+      background: #edf8f1;
+      border-radius: 10px;
+      display: none;
+      white-space: pre-wrap;
+    }
+
+    #message.error {
+      color: var(--danger);
+      background: #fff0f2;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full {
+        grid-column: auto;
+      }
+
+      .body {
+        padding: 19px;
+      }
+
+      .page-header {
+        padding: 18px;
+      }
+
+      .page-header h1 {
+        font-size: 17px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="card">
+
+    <header class="page-header">
+
+      <h1 id="pageTitle">
+        إضافة مركز جديد
+      </h1>
+
+      <a
+        href="admin.html"
+        class="back-link">
+        العودة للوحة الإدارة ←
+      </a>
+
+    </header>
+
+    <div class="body">
+
+      <form id="centerForm">
+
+        <div class="grid">
+
+          <div class="field">
+            <label for="centerName">
+              اسم المركز
+              <span class="required">*</span>
+            </label>
+
+            <input
+              id="centerName"
+              required
+            >
+          </div>
+
+          <div class="field">
+            <label for="centerId">
+              رقم المركز
+            </label>
+
+            <input
+              id="centerId"
+              placeholder="يُنشأ تلقائيًا"
+              readonly
+            >
+          </div>
+
+          <div class="field">
+            <label for="manager">
+              اسم المدير
+            </label>
+
+            <input id="manager">
+          </div>
+
+          <div class="field">
+            <label for="email">
+              البريد الإلكتروني
+            </label>
+
+            <input
+              id="email"
+              type="email"
+            >
+          </div>
+
+          <div class="field">
+            <label for="whatsapp">
+              رقم واتساب
+            </label>
+
+            <input
+              id="whatsapp"
+              type="tel"
+              dir="ltr"
+            >
+          </div>
+
+          <div class="field">
+            <label for="centerLocation">
+              الموقع أو الإحداثيات
+              <span class="required">*</span>
+            </label>
+
+            <input
+              id="centerLocation"
+              dir="ltr"
+              placeholder="25.123456, 51.123456"
+              required
+            >
+          </div>
+
+          <div class="field full">
+
+            <label for="employees">
+              الموظفون
+              <span class="required">*</span>
+            </label>
+
+            <textarea
+              id="employees"
+              required
+              placeholder="رقم الموظف, الاسم, الوظيفة, صلاحية المؤقت&#10;123, أحمد محمد, مدرس, نعم"
+            ></textarea>
+
+            <div class="hint">
+              كل موظف في سطر مستقل.
+              الصيغة: رقم الموظف، الاسم، الوظيفة، صلاحية التسجيل المؤقت.
+              الحقل الرابع اختياري، واكتب «نعم» لمنح الموظف صلاحية التسجيل المؤقت.
+            </div>
+
+            <div class="hint">
+              عند تعديل مركز، يتم تحديث الموظفين المكتوبين وإضافة الموظفين الجدد،
+              ولا يتم حذف موظف لمجرد حذف سطره من هذه الخانة.
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="actions">
+
+          <button
+            id="saveButton"
+            type="submit"
+            class="primary">
+            حفظ المركز
+          </button>
+
+          <a
+            href="admin.html"
+            class="button secondary">
+            إلغاء
+          </a>
+
+        </div>
+
+        <div
+          id="message"
+          role="status"
+          aria-live="polite">
+        </div>
+
+      </form>
+
+    </div>
+
+  </main>
+
+  <script>
+    "use strict";
+
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec";
+
+    const parameters =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const editCenterId =
+      (
+        parameters.get("center") ||
+        ""
+      ).trim();
+
+    const form =
+      document.getElementById(
+        "centerForm"
+      );
+
+    const pageTitle =
+      document.getElementById(
+        "pageTitle"
+      );
+
+    const centerIdInput =
+      document.getElementById(
+        "centerId"
+      );
+
+    const centerNameInput =
+      document.getElementById(
+        "centerName"
+      );
+
+    const managerInput =
+      document.getElementById(
+        "manager"
+      );
+
+    const emailInput =
+      document.getElementById(
+        "email"
+      );
+
+    const whatsappInput =
+      document.getElementById(
+        "whatsapp"
+      );
+
+    const locationInput =
+      document.getElementById(
+        "centerLocation"
+      );
+
+    const employeesInput =
+      document.getElementById(
+        "employees"
+      );
+
+    const saveButton =
+      document.getElementById(
+        "saveButton"
+      );
+
+    const messageElement =
+      document.getElementById(
+        "message"
+      );
+
+    function showMessage(
+      text,
+      isError = false
+    ) {
+      messageElement.textContent = text;
+
+      messageElement.className =
+        isError ? "error" : "";
+
+      messageElement.style.display =
+        "block";
+    }
+
+    function setSaving(value) {
+      saveButton.disabled = value;
+
+      saveButton.textContent = value
+        ? "⏳ جاري الحفظ..."
+        : editCenterId
+          ? "حفظ التعديلات"
+          : "حفظ المركز";
+    }
+
+    async function callAPI(data) {
+      const response = await fetch(
+        API_URL,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
+
+          body: JSON.stringify(data),
+
+          redirect: "follow",
+
+          cache: "no-store"
+        }
+      );
+
+      const text =
+        await response.text();
+
+      if (
+        !response.ok ||
+        /^\s*</.test(text)
+      ) {
+        throw new Error(
+          "تعذر الاتصال بالخادم"
+        );
+      }
+
+      let result;
+
+      try {
+        result = JSON.parse(text);
+      } catch (error) {
+        throw new Error(
+          "استجابة الخادم ليست JSON"
+        );
+      }
+
+      if (!result.success) {
+        throw new Error(
+          result.error ||
+          "فشلت العملية"
+        );
+      }
+
+      return result.data;
+    }
+
+    function readFormData() {
+      return {
+        centerId: editCenterId,
+
+        centerName:
+          centerNameInput.value.trim(),
+
+        manager:
+          managerInput.value.trim(),
+
+        email:
+          emailInput.value.trim(),
+
+        whatsapp:
+          whatsappInput.value.trim(),
+
+        location:
+          locationInput.value.trim(),
+
+        employees:
+          employeesInput.value.trim()
+      };
+    }
+
+    function validateData(data) {
+      if (!data.centerName) {
+        return "أدخل اسم المركز";
+      }
+
+      if (!data.location) {
+        return (
+          "أدخل رابط الموقع أو الإحداثيات"
+        );
+      }
+
+      if (!data.employees) {
+        return (
+          "أدخل بيانات موظف واحد على الأقل"
+        );
+      }
+
+      const lines = data.employees
+        .split(/\r?\n/)
+        .map(function (line) {
+          return line.trim();
+        })
+        .filter(Boolean);
+
+      for (
+        let index = 0;
+        index < lines.length;
+        index += 1
+      ) {
+        const normalizedLine =
+          lines[index].replace(/،/g, ",");
+
+        const parts =
+          normalizedLine.split(",");
+
+        if (
+          parts.length < 2 ||
+          !parts[0].trim() ||
+          !parts[1].trim()
+        ) {
+          return (
+            "بيانات الموظف في السطر " +
+            (index + 1) +
+            " غير صحيحة"
+          );
+        }
+      }
+
+      return "";
+    }
+
+    async function loadCenterForEdit() {
+      if (!editCenterId) {
+        return;
+      }
+
+      pageTitle.textContent =
+        "تعديل بيانات المركز";
+
+      saveButton.textContent =
+        "حفظ التعديلات";
+
+      centerIdInput.value =
+        editCenterId;
+
+      showMessage(
+        "⏳ جاري تحميل بيانات المركز..."
+      );
+
+      try {
+        const center =
+          await callAPI({
+            action:
+              "getCenterForEdit",
+
+            centerId:
+              editCenterId
+          });
+
+        centerIdInput.value =
+          center.id || editCenterId;
+
+        centerNameInput.value =
+          center.name || "";
+
+        managerInput.value =
+          center.manager || "";
+
+        emailInput.value =
+          center.email || "";
+
+        whatsappInput.value =
+          center.whatsapp || "";
+
+        locationInput.value =
+          center.location || "";
+
+        employeesInput.value =
+          (center.employees || [])
+            .map(
+              function (employee) {
+                return [
+                  employee.id,
+                  employee.name,
+                  employee.job || "",
+                  employee.temp || ""
+                ].join(", ");
+              }
+            )
+            .join("\n");
+
+        messageElement.style.display =
+          "none";
+
+      } catch (error) {
+        showMessage(
+          "❌ " + error.message,
+          true
+        );
+      }
+    }
+
+    form.addEventListener(
+      "submit",
+      async function (event) {
+        event.preventDefault();
+
+        const data =
+          readFormData();
+
+        const validationError =
+          validateData(data);
+
+        if (validationError) {
+          showMessage(
+            "⚠️ " + validationError,
+            true
+          );
+
+          return;
+        }
+
+        setSaving(true);
+
+        showMessage(
+          "⏳ جاري حفظ البيانات..."
+        );
+
+        try {
+          const result =
+            await callAPI({
+              action: "saveCenter",
+
+              centerId:
+                data.centerId,
+
+              centerName:
+                data.centerName,
+
+              manager:
+                data.manager,
+
+              email:
+                data.email,
+
+              whatsapp:
+                data.whatsapp,
+
+              location:
+                data.location,
+
+              employees:
+                data.employees
+            });
+
+          centerIdInput.value =
+            result.id;
+
+          showMessage(
+            "✅ " +
+            (
+              result.message ||
+              "تم حفظ المركز بنجاح"
+            )
+          );
+
+          setTimeout(
+            function () {
+              window.location.href =
+                "admin.html";
+            },
+            1200
+          );
+
+        } catch (error) {
+          showMessage(
+            "❌ " + error.message,
+            true
+          );
+
+        } finally {
+          setSaving(false);
+        }
+      }
+    );
+
+    loadCenterForEdit();
+  </script>
+
+</body>
+</html>
