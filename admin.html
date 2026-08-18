@@ -557,109 +557,216 @@
         4000
       );
     }
+function render(list) {
 
-    function renderCenters(list) {
-      const body =
-        document.getElementById(
-          "centersBody"
+  const body =
+    document.getElementById("centersBody");
+
+
+  body.replaceChildren();
+
+
+  if (!list.length) {
+
+    body.innerHTML = `
+
+      <tr>
+
+        <td colspan="6" class="empty">
+
+          لا توجد مراكز
+
+        </td>
+
+      </tr>
+
+    `;
+
+    return;
+
+  }
+
+
+  list.forEach(function(c) {
+
+    const tr =
+      document.createElement("tr");
+
+
+    const values = [
+
+      c.id,
+
+      c.name,
+
+      c.manager || "—",
+
+      c.employeeCount || 0,
+
+      c.whatsapp || "—"
+
+    ];
+
+
+    values.forEach(function(value) {
+
+      const td =
+        document.createElement("td");
+
+
+      td.textContent = value;
+
+
+      tr.appendChild(td);
+
+    });
+
+
+    const actionsCell =
+      document.createElement("td");
+
+
+    const actions =
+      document.createElement("div");
+
+
+    actions.className = "actions";
+
+
+    // زر بيانات المركز
+
+    const details =
+      document.createElement("button");
+
+
+    details.className =
+      "secondary small";
+
+
+    details.textContent =
+      "بيانات";
+
+
+    details.onclick =
+      function() {
+
+        openCenterModal(c);
+
+      };
+
+
+    // زر تعديل المركز
+
+    const edit =
+      document.createElement("a");
+
+
+    edit.className =
+      "button secondary small";
+
+
+    edit.textContent =
+      "تعديل";
+
+
+    edit.href =
+      formUrl(c.id);
+
+
+    // زر مسح الجوال
+
+    const device =
+      document.createElement("button");
+
+
+    device.className =
+      "secondary small";
+
+
+    device.textContent =
+      "مسح جوال";
+
+
+    device.onclick =
+      function() {
+
+        openModal(c.id);
+
+      };
+
+
+    // زر إرسال التقرير اليومي
+
+    const dailyReport =
+      document.createElement("button");
+
+
+    dailyReport.className =
+      "primary small";
+
+
+    dailyReport.textContent =
+      "إرسال اليومي";
+
+
+    dailyReport.onclick =
+      function() {
+
+        sendReport(
+          c,
+          "daily",
+          dailyReport
         );
 
-      body.replaceChildren();
+      };
 
-      if (!list.length) {
-        body.innerHTML = `
-          <tr>
-            <td colspan="6" class="empty">
-              لا توجد مراكز
-            </td>
-          </tr>
-        `;
 
-        return;
-      }
+    // زر إرسال التقرير الشهري
 
-      list.forEach(function (center) {
-        const row =
-          document.createElement("tr");
+    const monthlyReport =
+      document.createElement("button");
 
-        const values = [
-          center.id,
-          center.name,
-          center.manager || "—",
-          center.employeeCount || 0,
-          center.whatsapp || "—"
-        ];
 
-        values.forEach(function (value) {
-          const cell =
-            document.createElement("td");
+    monthlyReport.className =
+      "primary small";
 
-          cell.textContent = value;
-          row.appendChild(cell);
-        });
 
-        const actionsCell =
-          document.createElement("td");
+    monthlyReport.textContent =
+      "إرسال الشهري";
 
-        const actions =
-          document.createElement("div");
 
-        actions.className = "actions";
+    monthlyReport.onclick =
+      function() {
 
-        const detailsButton =
-  document.createElement("button");
+        sendReport(
+          c,
+          "monthly",
+          monthlyReport
+        );
 
-detailsButton.type = "button";
+      };
 
-detailsButton.className =
-  "secondary small";
 
-detailsButton.textContent =
-  "بيانات";
+    actions.appendChild(details);
 
-detailsButton.onclick =
-  function () {
-    openCenterDetails(center);
-  };
+    actions.appendChild(edit);
 
-        const editLink =
-          document.createElement("a");
+    actions.appendChild(device);
 
-        editLink.className =
-          "button secondary small";
+    actions.appendChild(dailyReport);
 
-        editLink.textContent = "تعديل";
+    actions.appendChild(monthlyReport);
 
-        editLink.href =
-          formUrl(center.id);
 
-        const deviceButton =
-          document.createElement("button");
+    actionsCell.appendChild(actions);
 
-        deviceButton.type = "button";
+    tr.appendChild(actionsCell);
 
-        deviceButton.className =
-          "secondary small";
+    body.appendChild(tr);
 
-        deviceButton.textContent =
-          "مسح جوال";
+  });
 
-        deviceButton.onclick =
-          function () {
-            openDeviceModal(center.id);
-          };
-
-        actions.append(
-  detailsButton,
-  editLink,
-  deviceButton
-);
-
-        actionsCell.appendChild(actions);
-        row.appendChild(actionsCell);
-        body.appendChild(row);
-      });
-    }
+}
     
     function openCenterDetails(center) {
   const modal =
@@ -1153,6 +1260,95 @@ function closeCenterDetails() {
   );
 
     loadDashboard();
+    async function sendReport(
+  center,
+  reportType,
+  button
+) {
+
+  if (!center.email) {
+
+    notify(
+      "لا يوجد بريد إلكتروني مسجل لهذا المركز",
+      true
+    );
+
+    return;
+
+  }
+
+
+  const reportName =
+    reportType === "monthly"
+      ? "الشهري"
+      : "اليومي";
+
+
+  const confirmed =
+    confirm(
+      "هل تريد إرسال التقرير " +
+      reportName +
+      " إلى البريد:\n" +
+      center.email +
+      "؟"
+    );
+
+
+  if (!confirmed) {
+
+    return;
+
+  }
+
+
+  const oldText =
+    button.textContent;
+
+
+  button.disabled = true;
+
+  button.textContent =
+    "جاري الإرسال...";
+
+
+  try {
+
+    const result = await api({
+
+      action: "sendCenterReport",
+
+      centerId: center.id,
+
+      reportType: reportType
+
+    });
+
+
+    notify(
+      result.message ||
+      "تم إرسال التقرير بنجاح"
+    );
+
+  }
+
+  catch (error) {
+
+    notify(
+      error.message,
+      true
+    );
+
+  }
+
+  finally {
+
+    button.disabled = false;
+
+    button.textContent = oldText;
+
+  }
+
+}
   </script>
 
 </body>
