@@ -557,7 +557,7 @@
         4000
       );
     }
-function renderCenters(list) {
+function render(list) {
 
   const body =
     document.getElementById("centersBody");
@@ -962,8 +962,8 @@ function closeCenterDetails() {
           .getElementById("devicesCount")
           .textContent =
             data.devicesCount || 0;
-            
-        renderCenters(centers);
+
+        render(centers);
         fillCenterSelect();
 
       } catch (error) {
@@ -1222,7 +1222,7 @@ function closeCenterDetails() {
               }
             );
 
-          renderCenters(filtered);
+          render(filtered);
         }
       );
 
