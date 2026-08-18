@@ -1260,17 +1260,21 @@ function closeCenterDetails() {
   );
 
     loadDashboard();
+
     async function sendReport(
   center,
   reportType,
   button
 ) {
 
+  const API_URL =
+    "https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec";
+
+
   if (!center.email) {
 
-    notify(
-      "لا يوجد بريد إلكتروني مسجل لهذا المركز",
-      true
+    alert(
+      "لا يوجد بريد إلكتروني مسجل لهذا المركز"
     );
 
     return;
@@ -1288,7 +1292,7 @@ function closeCenterDetails() {
     confirm(
       "هل تريد إرسال التقرير " +
       reportName +
-      " إلى البريد:\n" +
+      " إلى:\n" +
       center.email +
       "؟"
     );
@@ -1313,29 +1317,84 @@ function closeCenterDetails() {
 
   try {
 
-    const result = await api({
+    const response = await fetch(
+      API_URL,
+      {
 
-      action: "sendCenterReport",
+        method: "POST",
 
-      centerId: center.id,
+        headers: {
 
-      reportType: reportType
+          "Content-Type":
+            "text/plain;charset=utf-8"
 
-    });
+        },
 
+        body: JSON.stringify({
 
-    notify(
-      result.message ||
-      "تم إرسال التقرير بنجاح"
+          action: "sendCenterReport",
+
+          centerId: center.id,
+
+          reportType: reportType
+
+        })
+
+      }
     );
+
+
+    const text =
+      await response.text();
+
+
+    if (
+      !text ||
+      text.trim().startsWith("<")
+    ) {
+
+      throw new Error(
+        "استجابة الخادم غير صحيحة"
+      );
+
+    }
+
+
+    const result =
+      JSON.parse(text);
+
+
+    if (!result.success) {
+
+      throw new Error(
+        result.error ||
+        "تعذر إرسال التقرير"
+      );
+
+    }
+
+
+    const message =
+      result.data &&
+      result.data.message
+
+        ? result.data.message
+
+        : "تم إرسال التقرير بنجاح";
+
+
+    alert(message);
 
   }
 
   catch (error) {
 
-    notify(
-      error.message,
-      true
+    console.error(error);
+
+
+    alert(
+      "تعذر إرسال التقرير: " +
+      error.message
     );
 
   }
