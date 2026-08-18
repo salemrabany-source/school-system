@@ -2,10 +2,15 @@
 <html lang="ar" dir="rtl">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>لوحة إدارة الحضور</title>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>لوحة إدارة الحضور والانصراف</title>
 
   <link
     href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap"
@@ -13,6 +18,7 @@
   >
 
   <style>
+
     :root {
       --qatar: #8a1538;
       --qatar-dark: #64102a;
@@ -22,9 +28,11 @@
       --success: #14804a;
     }
 
+
     * {
       box-sizing: border-box;
     }
+
 
     body {
       margin: 0;
@@ -33,6 +41,7 @@
       font-family: "Cairo", Arial, sans-serif;
       background: var(--background);
     }
+
 
     header {
       padding: 18px 5%;
@@ -49,30 +58,36 @@
       box-shadow: 0 8px 24px rgba(100, 16, 42, 0.2);
     }
 
+
     .brand {
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
+
     .flag {
       font-size: 34px;
     }
+
 
     .brand strong {
       display: block;
       font-size: 20px;
     }
 
+
     .brand small {
       display: block;
       opacity: 0.8;
     }
 
+
     .container {
-      width: min(1160px, 94%);
+      width: min(1200px, 94%);
       margin: 26px auto;
     }
+
 
     .toolbar,
     .panel-head {
@@ -83,13 +98,16 @@
       flex-wrap: wrap;
     }
 
+
     .toolbar {
       margin-bottom: 20px;
     }
 
+
     h2 {
       color: var(--qatar-dark);
     }
+
 
     button,
     .button {
@@ -102,10 +120,18 @@
       cursor: pointer;
     }
 
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.55;
+    }
+
+
     .primary {
       color: white;
       background: var(--qatar);
     }
+
 
     .secondary {
       color: var(--qatar);
@@ -113,15 +139,12 @@
       border: 1px solid var(--border);
     }
 
+
     .danger {
       color: white;
       background: var(--danger);
     }
 
-    button:disabled {
-      cursor: wait;
-      opacity: 0.55;
-    }
 
     .stats {
       margin-bottom: 22px;
@@ -129,6 +152,7 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 15px;
     }
+
 
     .stat,
     .panel {
@@ -138,14 +162,17 @@
       box-shadow: 0 8px 25px rgba(100, 16, 42, 0.05);
     }
 
+
     .stat {
       padding: 18px;
     }
+
 
     .stat span {
       color: #75666c;
       font-size: 13px;
     }
+
 
     .stat strong {
       display: block;
@@ -153,14 +180,17 @@
       font-size: 28px;
     }
 
+
     .panel {
       overflow: hidden;
     }
+
 
     .panel-head {
       padding: 16px 18px;
       border-bottom: 1px solid var(--border);
     }
+
 
     input,
     select {
@@ -172,28 +202,33 @@
       outline: none;
     }
 
+
     input:focus,
     select:focus {
       border-color: var(--qatar);
       box-shadow: 0 0 0 3px rgba(138, 21, 56, 0.09);
     }
 
+
     .table-wrap {
-      overflow: auto;
+      overflow-x: auto;
     }
+
 
     table {
       width: 100%;
-      min-width: 750px;
+      min-width: 950px;
       border-collapse: collapse;
     }
 
+
     th,
     td {
-      padding: 13px 15px;
+      padding: 13px 12px;
       text-align: right;
       border-bottom: 1px solid #f1e8eb;
     }
+
 
     th {
       color: #75666c;
@@ -201,15 +236,26 @@
       background: #fcfafb;
     }
 
+
+    tbody tr:hover {
+      background: #fffafb;
+    }
+
+
     .actions {
       display: flex;
+      align-items: center;
       gap: 6px;
+      flex-wrap: wrap;
     }
+
 
     .small {
       padding: 7px 10px;
       font-size: 12px;
+      white-space: nowrap;
     }
+
 
     .empty {
       padding: 35px;
@@ -217,35 +263,44 @@
       text-align: center;
     }
 
+
     .modal {
       position: fixed;
       inset: 0;
-      z-index: 10;
+      z-index: 50;
       padding: 18px;
-      background: rgba(47, 17, 27, 0.6);
+      background: rgba(47, 17, 27, 0.62);
       display: none;
       align-items: center;
       justify-content: center;
     }
 
+
     .modal.open {
       display: flex;
     }
 
+
     .dialog {
-      width: min(450px, 100%);
+      width: min(480px, 100%);
+      max-height: 90vh;
       padding: 23px;
       background: white;
       border-radius: 20px;
+      overflow-y: auto;
     }
 
+
     .dialog h3 {
+      margin-top: 0;
       color: var(--qatar);
     }
+
 
     .field {
       margin: 13px 0;
     }
+
 
     .field label {
       display: block;
@@ -253,9 +308,11 @@
       font-weight: 700;
     }
 
+
     .field select {
       width: 100%;
     }
+
 
     .dialog-actions {
       margin-top: 19px;
@@ -263,16 +320,33 @@
       gap: 8px;
     }
 
+
     .dialog-actions button {
       flex: 1;
     }
+
+
+    .center-link {
+      width: 100%;
+      margin-top: 8px;
+      direction: ltr;
+    }
+
+
+    .qr-image {
+      display: block;
+      width: 220px;
+      max-width: 100%;
+      margin: 15px auto;
+    }
+
 
     #message {
       position: fixed;
       left: 18px;
       bottom: 18px;
-      z-index: 20;
-      max-width: 360px;
+      z-index: 100;
+      max-width: min(400px, 90%);
       padding: 12px 16px;
       color: white;
       background: var(--success);
@@ -280,168 +354,299 @@
       display: none;
     }
 
+
     #message.error {
       background: var(--danger);
     }
 
+
     @media (max-width: 700px) {
+
       .stats {
         grid-template-columns: 1fr;
       }
+
 
       .toolbar .button,
       .panel-head input {
         width: 100%;
       }
 
+
       .brand strong {
         font-size: 16px;
       }
+
+
+      .dialog-actions {
+        flex-direction: column;
+      }
+
     }
+
   </style>
+
 </head>
+
 
 <body>
 
+
   <header>
+
     <div class="brand">
+
       <span class="flag">🇶🇦</span>
 
       <div>
-        <strong>لوحة إدارة الحضور والانصراف</strong>
-        <small>مراكز التحفيظ</small>
+
+        <strong>
+          لوحة إدارة الحضور والانصراف
+        </strong>
+
+        <small>
+          مراكز التحفيظ
+        </small>
+
       </div>
+
     </div>
 
+
     <button
+      id="refreshButton"
       type="button"
       class="secondary"
-      onclick="loadDashboard()">
+    >
+
       ↻ تحديث
+
     </button>
+
   </header>
+
 
   <main class="container">
 
+
     <div class="toolbar">
-      <h2>إدارة المراكز</h2>
+
+      <h2>
+        إدارة المراكز
+      </h2>
+
 
       <a
         id="addLink"
-        class="button primary">
+        class="button primary"
+      >
+
         ＋ إضافة مركز جديد
+
       </a>
+
     </div>
+
 
     <section class="stats">
 
+
       <article class="stat">
+
         <span>عدد المراكز</span>
+
         <strong id="centersCount">—</strong>
+
       </article>
 
+
       <article class="stat">
+
         <span>عدد الموظفين</span>
+
         <strong id="employeesCount">—</strong>
+
       </article>
 
+
       <article class="stat">
+
         <span>الأجهزة المرتبطة</span>
+
         <strong id="devicesCount">—</strong>
+
       </article>
+
 
     </section>
 
+
     <section class="panel">
 
+
       <div class="panel-head">
-        <strong>قائمة المراكز</strong>
+
+        <strong>
+          قائمة المراكز
+        </strong>
+
 
         <input
           id="search"
           type="search"
           placeholder="بحث باسم أو رقم المركز"
         >
+
       </div>
+
 
       <div class="table-wrap">
+
         <table>
+
           <thead>
+
             <tr>
+
               <th>رقم المركز</th>
+
               <th>اسم المركز</th>
+
               <th>المدير</th>
+
               <th>الموظفون</th>
+
               <th>واتساب</th>
+
               <th>الإجراءات</th>
+
             </tr>
+
           </thead>
 
+
           <tbody id="centersBody">
+
             <tr>
-              <td colspan="6" class="empty">
+
+              <td
+                colspan="6"
+                class="empty"
+              >
+
                 جاري تحميل البيانات...
+
               </td>
+
             </tr>
+
           </tbody>
+
         </table>
+
       </div>
+
 
     </section>
 
+
   </main>
 
-  <div id="centerDetailsModal" class="modal">
 
-  <div class="dialog">
+  <!-- نافذة بيانات المركز -->
 
-    <h3 id="detailsCenterName">
-      بيانات المركز
-    </h3>
+  <div
+    id="centerDetailsModal"
+    class="modal"
+  >
 
-    <div id="centerDetailsContent"></div>
+    <div class="dialog">
 
-    <div class="dialog-actions">
+      <h3 id="detailsCenterName">
+        بيانات المركز
+      </h3>
 
-      <button
-        type="button"
-        class="secondary"
-        onclick="closeCenterDetails()">
-        إغلاق
-      </button>
+
+      <div id="centerDetailsContent">
+      </div>
+
+
+      <div class="dialog-actions">
+
+        <button
+          type="button"
+          class="secondary"
+          onclick="closeCenterDetails()"
+        >
+
+          إغلاق
+
+        </button>
+
+      </div>
 
     </div>
 
   </div>
 
-</div>
 
-  <div id="deviceModal" class="modal">
+  <!-- نافذة مسح جهاز الموظف -->
+
+  <div
+    id="deviceModal"
+    class="modal"
+  >
 
     <div class="dialog">
 
-      <h3>مسح ربط جهاز موظف</h3>
+      <h3>
+        مسح ربط جهاز موظف
+      </h3>
+
 
       <p>
-        بعد المسح يستطيع الموظف ربط هاتفه الجديد
-        عند أول تسجيل.
+
+        بعد المسح يستطيع الموظف ربط هاتفه
+        الجديد عند أول تسجيل.
+
       </p>
 
+
       <div class="field">
-        <label for="deviceCenter">المركز</label>
+
+        <label for="deviceCenter">
+          المركز
+        </label>
+
 
         <select id="deviceCenter">
-          <option value="">اختر المركز</option>
+
+          <option value="">
+            اختر المركز
+          </option>
+
         </select>
+
       </div>
+
 
       <div class="field">
-        <label for="deviceEmployee">الموظف</label>
+
+        <label for="deviceEmployee">
+          الموظف
+        </label>
+
 
         <select id="deviceEmployee">
-          <option value="">اختر المركز أولًا</option>
+
+          <option value="">
+            اختر المركز أولًا
+          </option>
+
         </select>
+
       </div>
+
 
       <div class="dialog-actions">
 
@@ -449,15 +654,21 @@
           id="clearBtn"
           type="button"
           class="danger"
-          onclick="clearDevice()">
+        >
+
           مسح الجوال
+
         </button>
+
 
         <button
           type="button"
           class="secondary"
-          onclick="closeModal()">
+          onclick="closeDeviceModal()"
+        >
+
           إلغاء
+
         </button>
 
       </div>
@@ -466,671 +677,1145 @@
 
   </div>
 
-  <div id="message" role="status"></div>
+
+  <div
+    id="message"
+    role="status"
+  ></div>
+
 
   <script>
+
     "use strict";
 
+
+    // رابط تطبيق Google Apps Script
+
     const API_URL =
+
       "https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec";
+
 
     let centers = [];
 
-    function formUrl(centerId = "") {
-      const url = "center-form.html";
 
-      if (!centerId) {
-        return url;
+
+    // رابط إضافة أو تعديل المركز
+
+    function formUrl(centerId = "") {
+
+      let url = "center-form.html";
+
+
+      if (centerId) {
+
+        url +=
+          "?center=" +
+          encodeURIComponent(centerId);
+
       }
 
-      return (
-        url +
-        "?center=" +
-        encodeURIComponent(centerId)
-      );
+
+      return url;
+
     }
 
+
+
+    // الاتصال بالخادم
+
     async function callAPI(data) {
-      const response = await fetch(API_URL, {
-        method: "POST",
 
-        headers: {
-          "Content-Type":
-            "text/plain;charset=utf-8"
-        },
+      const response =
+        await fetch(
 
-        body: JSON.stringify(data),
+          API_URL,
 
-        redirect: "follow",
+          {
 
-        cache: "no-store"
-      });
+            method: "POST",
 
-      const text = await response.text();
+            headers: {
+
+              "Content-Type":
+                "text/plain;charset=utf-8"
+
+            },
+
+            body:
+              JSON.stringify(data),
+
+            redirect:
+              "follow",
+
+            cache:
+              "no-store"
+
+          }
+
+        );
+
+
+      const text =
+        await response.text();
+
 
       if (
         !response.ok ||
+        !text ||
         /^\s*</.test(text)
       ) {
+
         throw new Error(
           "تعذر الاتصال بالخادم"
         );
+
       }
+
 
       let result;
 
+
       try {
-        result = JSON.parse(text);
-      } catch (error) {
-        throw new Error(
-          "استجابة الخادم ليست JSON"
-        );
+
+        result =
+          JSON.parse(text);
+
       }
+
+      catch (error) {
+
+        throw new Error(
+          "استجابة الخادم غير صحيحة"
+        );
+
+      }
+
 
       if (!result.success) {
+
         throw new Error(
+
           result.error ||
           "فشلت العملية"
+
         );
+
       }
+
 
       return result.data;
+
     }
 
-    function notify(text, error = false) {
-      const message =
-        document.getElementById("message");
 
-      message.textContent = text;
+
+    // إظهار رسالة
+
+    function notify(
+      text,
+      isError = false
+    ) {
+
+      const message =
+        document.getElementById(
+          "message"
+        );
+
+
+      message.textContent =
+        text;
+
 
       message.className =
-        error ? "error" : "";
+        isError
+          ? "error"
+          : "";
 
-      message.style.display = "block";
 
-      clearTimeout(notify.timer);
+      message.style.display =
+        "block";
 
-      notify.timer = setTimeout(
-        function () {
-          message.style.display = "none";
-        },
-        4000
-      );
-    }
-function render(list) {
 
-  const body =
-    document.getElementById("centersBody");
-
-
-  body.replaceChildren();
-
-
-  if (!list.length) {
-
-    body.innerHTML = `
-
-      <tr>
-
-        <td colspan="6" class="empty">
-
-          لا توجد مراكز
-
-        </td>
-
-      </tr>
-
-    `;
-
-    return;
-
-  }
-
-
-  list.forEach(function(c) {
-
-    const tr =
-      document.createElement("tr");
-
-
-    const values = [
-
-      c.id,
-
-      c.name,
-
-      c.manager || "—",
-
-      c.employeeCount || 0,
-
-      c.whatsapp || "—"
-
-    ];
-
-
-    values.forEach(function(value) {
-
-      const td =
-        document.createElement("td");
-
-
-      td.textContent = value;
-
-
-      tr.appendChild(td);
-
-    });
-
-
-    const actionsCell =
-      document.createElement("td");
-
-
-    const actions =
-      document.createElement("div");
-
-
-    actions.className = "actions";
-
-
-    // زر بيانات المركز
-
-    const details =
-      document.createElement("button");
-
-
-    details.className =
-      "secondary small";
-
-
-    details.textContent =
-      "بيانات";
-
-
-    details.onclick =
-      function() {
-
-        openCenterModal(c);
-
-      };
-
-
-    // زر تعديل المركز
-
-    const edit =
-      document.createElement("a");
-
-
-    edit.className =
-      "button secondary small";
-
-
-    edit.textContent =
-      "تعديل";
-
-
-    edit.href =
-      formUrl(c.id);
-
-
-    // زر مسح الجوال
-
-    const device =
-      document.createElement("button");
-
-
-    device.className =
-      "secondary small";
-
-
-    device.textContent =
-      "مسح جوال";
-
-
-    device.onclick =
-      function() {
-
-        openModal(c.id);
-
-      };
-
-
-    // زر إرسال التقرير اليومي
-
-    const dailyReport =
-      document.createElement("button");
-
-
-    dailyReport.className =
-      "primary small";
-
-
-    dailyReport.textContent =
-      "إرسال اليومي";
-
-
-    dailyReport.onclick =
-      function() {
-
-        sendReport(
-          c,
-          "daily",
-          dailyReport
-        );
-
-      };
-
-
-    // زر إرسال التقرير الشهري
-
-    const monthlyReport =
-      document.createElement("button");
-
-
-    monthlyReport.className =
-      "primary small";
-
-
-    monthlyReport.textContent =
-      "إرسال الشهري";
-
-
-    monthlyReport.onclick =
-      function() {
-
-        sendReport(
-          c,
-          "monthly",
-          monthlyReport
-        );
-
-      };
-
-
-    actions.appendChild(details);
-
-    actions.appendChild(edit);
-
-    actions.appendChild(device);
-
-    actions.appendChild(dailyReport);
-
-    actions.appendChild(monthlyReport);
-
-
-    actionsCell.appendChild(actions);
-
-    tr.appendChild(actionsCell);
-
-    body.appendChild(tr);
-
-  });
-
-}
-    
-    function openCenterDetails(center) {
-  const modal =
-    document.getElementById(
-      "centerDetailsModal"
-    );
-
-  const title =
-    document.getElementById(
-      "detailsCenterName"
-    );
-
-  const content =
-    document.getElementById(
-      "centerDetailsContent"
-    );
-
-  title.textContent =
-    center.name +
-    " - " +
-    center.id;
-
-  content.replaceChildren();
-
-  const details = [
-    [
-      "رقم المركز",
-      center.id
-    ],
-    [
-      "اسم المركز",
-      center.name
-    ],
-    [
-      "المدير",
-      center.manager || "—"
-    ],
-    [
-      "البريد",
-      center.email || "—"
-    ],
-    [
-      "واتساب",
-      center.whatsapp || "—"
-    ],
-    [
-      "الموقع",
-      center.latitude &&
-      center.longitude
-
-        ? center.latitude +
-          "," +
-          center.longitude
-
-        : "—"
-    ],
-    [
-      "عدد الموظفين",
-      center.employeeCount || 0
-    ]
-  ];
-
-  details.forEach(
-    function (item) {
-      const paragraph =
-        document.createElement("p");
-
-      const label =
-        document.createElement("strong");
-
-      label.textContent =
-        item[0] + ": ";
-
-      paragraph.appendChild(label);
-
-      paragraph.append(
-        String(item[1])
+      clearTimeout(
+        notify.timer
       );
 
-      content.appendChild(paragraph);
+
+      notify.timer =
+        setTimeout(
+
+          function () {
+
+            message.style.display =
+              "none";
+
+          },
+
+          4500
+
+        );
+
     }
-  );
 
-  const centerLink =
-    center.link ||
-    (
-      "https://centres.rimgat.com/?center=" +
-      encodeURIComponent(center.id)
-    );
 
-  const linkLabel =
-    document.createElement("strong");
 
-  linkLabel.textContent =
-    "رابط المركز:";
+    // إنشاء زر
 
-  const linkInput =
-    document.createElement("input");
+    function createButton(
+      text,
+      className,
+      clickHandler
+    ) {
 
-  linkInput.value = centerLink;
-  linkInput.readOnly = true;
-  linkInput.dir = "ltr";
-  linkInput.style.width = "100%";
-  linkInput.style.marginTop = "8px";
-
-  const qrImage =
-    document.createElement("img");
-
-  qrImage.alt =
-    "كود QR للمركز";
-
-  qrImage.src =
-    center.qr ||
-    (
-      "https://quickchart.io/qr" +
-      "?size=500&text=" +
-      encodeURIComponent(centerLink)
-    );
-
-  qrImage.style.display = "block";
-  qrImage.style.width = "220px";
-  qrImage.style.maxWidth = "100%";
-  qrImage.style.margin =
-    "15px auto";
-
-  const copyButton =
-    document.createElement("button");
-
-  copyButton.type = "button";
-  copyButton.className = "primary";
-  copyButton.textContent =
-    "نسخ رابط المركز";
-
-  copyButton.onclick =
-    async function () {
-      try {
-        await navigator.clipboard
-          .writeText(centerLink);
-
-        notify(
-          "تم نسخ رابط المركز"
+      const button =
+        document.createElement(
+          "button"
         );
 
-      } catch (error) {
-        linkInput.focus();
-        linkInput.select();
 
-        notify(
-          "تم تحديد الرابط، انسخه يدويًا"
+      button.type =
+        "button";
+
+
+      button.className =
+        className;
+
+
+      button.textContent =
+        text;
+
+
+      button.addEventListener(
+        "click",
+        clickHandler
+      );
+
+
+      return button;
+
+    }
+
+
+
+    // عرض قائمة المراكز
+
+    function renderCenters(list) {
+
+      const body =
+        document.getElementById(
+          "centersBody"
         );
+
+
+      body.replaceChildren();
+
+
+      if (!Array.isArray(list)) {
+
+        list = [];
+
       }
-    };
-
-  content.append(
-    linkLabel,
-    linkInput,
-    qrImage,
-    copyButton
-  );
-
-  modal.classList.add("open");
-}
 
 
-function closeCenterDetails() {
-  document
-    .getElementById(
-      "centerDetailsModal"
-    )
-    .classList
-    .remove("open");
-}
+      if (!list.length) {
+
+        body.innerHTML = `
+
+          <tr>
+
+            <td
+              colspan="6"
+              class="empty"
+            >
+
+              لا توجد مراكز
+
+            </td>
+
+          </tr>
+
+        `;
+
+
+        return;
+
+      }
+
+
+      const fragment =
+        document.createDocumentFragment();
+
+
+      list.forEach(
+
+        function (center) {
+
+          const row =
+            document.createElement(
+              "tr"
+            );
+
+
+          const values = [
+
+            center.id || "—",
+
+            center.name || "—",
+
+            center.manager || "—",
+
+            center.employeeCount || 0,
+
+            center.whatsapp || "—"
+
+          ];
+
+
+          values.forEach(
+
+            function (value) {
+
+              const cell =
+                document.createElement(
+                  "td"
+                );
+
+
+              cell.textContent =
+                value;
+
+
+              row.appendChild(
+                cell
+              );
+
+            }
+
+          );
+
+
+          const actionsCell =
+            document.createElement(
+              "td"
+            );
+
+
+          const actions =
+            document.createElement(
+              "div"
+            );
+
+
+          actions.className =
+            "actions";
+
+
+          const detailsButton =
+            createButton(
+
+              "بيانات",
+
+              "secondary small",
+
+              function () {
+
+                openCenterDetails(
+                  center
+                );
+
+              }
+
+            );
+
+
+          const editLink =
+            document.createElement(
+              "a"
+            );
+
+
+          editLink.className =
+            "button secondary small";
+
+
+          editLink.textContent =
+            "تعديل";
+
+
+          editLink.href =
+            formUrl(center.id);
+
+
+          const deviceButton =
+            createButton(
+
+              "مسح جوال",
+
+              "secondary small",
+
+              function () {
+
+                openDeviceModal(
+                  center.id
+                );
+
+              }
+
+            );
+
+
+          const dailyButton =
+            createButton(
+
+              "إرسال اليومي",
+
+              "primary small",
+
+              function () {
+
+                sendReport(
+
+                  center,
+
+                  "daily",
+
+                  dailyButton
+
+                );
+
+              }
+
+            );
+
+
+          const monthlyButton =
+            createButton(
+
+              "إرسال الشهري",
+
+              "primary small",
+
+              function () {
+
+                sendReport(
+
+                  center,
+
+                  "monthly",
+
+                  monthlyButton
+
+                );
+
+              }
+
+            );
+
+
+          actions.append(
+
+            detailsButton,
+
+            editLink,
+
+            deviceButton,
+
+            dailyButton,
+
+            monthlyButton
+
+          );
+
+
+          actionsCell.appendChild(
+            actions
+          );
+
+
+          row.appendChild(
+            actionsCell
+          );
+
+
+          fragment.appendChild(
+            row
+          );
+
+        }
+
+      );
+
+
+      body.appendChild(
+        fragment
+      );
+
+    }
+
+
+
+    // تحميل بيانات لوحة الإدارة
 
     async function loadDashboard() {
-      try {
-        const data = await callAPI({
-          action: "getAdminDashboard"
-        });
 
-        centers = data.centers || [];
+      const refreshButton =
+        document.getElementById(
+          "refreshButton"
+        );
+
+
+      refreshButton.disabled =
+        true;
+
+
+      refreshButton.textContent =
+        "جاري التحميل...";
+
+
+      try {
+
+        const data =
+          await callAPI({
+
+            action:
+              "getAdminDashboard"
+
+          });
+
+
+        centers =
+
+          data &&
+          Array.isArray(data.centers)
+
+            ? data.centers
+
+            : [];
+
 
         document
-          .getElementById("centersCount")
+          .getElementById(
+            "centersCount"
+          )
           .textContent =
+
             data.centersCount || 0;
 
+
         document
-          .getElementById("employeesCount")
+          .getElementById(
+            "employeesCount"
+          )
           .textContent =
+
             data.employeesCount || 0;
 
+
         document
-          .getElementById("devicesCount")
+          .getElementById(
+            "devicesCount"
+          )
           .textContent =
+
             data.devicesCount || 0;
 
-        render(centers);
+
+        renderCenters(
+          centers
+        );
+
+
         fillCenterSelect();
 
-      } catch (error) {
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+
         document
-          .getElementById("centersBody")
+          .getElementById(
+            "centersBody"
+          )
           .innerHTML = `
+
             <tr>
-              <td colspan="6" class="empty">
+
+              <td
+                colspan="6"
+                class="empty"
+              >
+
                 تعذر تحميل البيانات
+
               </td>
+
             </tr>
+
           `;
 
-        notify(error.message, true);
+
+        notify(
+
+          error.message ||
+          "تعذر تحميل البيانات",
+
+          true
+
+        );
+
       }
+
+      finally {
+
+        refreshButton.disabled =
+          false;
+
+
+        refreshButton.textContent =
+          "↻ تحديث";
+
+      }
+
     }
 
+
+
+    // فتح بيانات المركز
+
+    function openCenterDetails(
+      center
+    ) {
+
+      const modal =
+        document.getElementById(
+          "centerDetailsModal"
+        );
+
+
+      const title =
+        document.getElementById(
+          "detailsCenterName"
+        );
+
+
+      const content =
+        document.getElementById(
+          "centerDetailsContent"
+        );
+
+
+      title.textContent =
+
+        (center.name || "المركز") +
+
+        " - " +
+
+        (center.id || "");
+
+
+      content.replaceChildren();
+
+
+      const details = [
+
+        [
+          "رقم المركز",
+          center.id || "—"
+        ],
+
+        [
+          "اسم المركز",
+          center.name || "—"
+        ],
+
+        [
+          "المدير",
+          center.manager || "—"
+        ],
+
+        [
+          "البريد",
+          center.email || "—"
+        ],
+
+        [
+          "واتساب",
+          center.whatsapp || "—"
+        ],
+
+        [
+          "الموقع",
+
+          center.latitude &&
+          center.longitude
+
+            ? center.latitude +
+              "," +
+              center.longitude
+
+            : "—"
+
+        ],
+
+        [
+          "عدد الموظفين",
+          center.employeeCount || 0
+        ]
+
+      ];
+
+
+      details.forEach(
+
+        function (item) {
+
+          const paragraph =
+            document.createElement(
+              "p"
+            );
+
+
+          const label =
+            document.createElement(
+              "strong"
+            );
+
+
+          label.textContent =
+            item[0] + ": ";
+
+
+          paragraph.appendChild(
+            label
+          );
+
+
+          paragraph.append(
+            String(item[1])
+          );
+
+
+          content.appendChild(
+            paragraph
+          );
+
+        }
+
+      );
+
+
+      const centerLink =
+
+        center.link ||
+
+        (
+          "https://centres.rimgat.com/?center=" +
+
+          encodeURIComponent(
+            center.id
+          )
+        );
+
+
+      const linkLabel =
+        document.createElement(
+          "strong"
+        );
+
+
+      linkLabel.textContent =
+        "رابط المركز:";
+
+
+      const linkInput =
+        document.createElement(
+          "input"
+        );
+
+
+      linkInput.value =
+        centerLink;
+
+
+      linkInput.readOnly =
+        true;
+
+
+      linkInput.className =
+        "center-link";
+
+
+      const qrImage =
+        document.createElement(
+          "img"
+        );
+
+
+      qrImage.alt =
+        "كود QR للمركز";
+
+
+      qrImage.className =
+        "qr-image";
+
+
+      qrImage.src =
+
+        center.qr ||
+
+        (
+          "https://quickchart.io/qr" +
+
+          "?size=500&text=" +
+
+          encodeURIComponent(
+            centerLink
+          )
+        );
+
+
+      const copyButton =
+        createButton(
+
+          "نسخ رابط المركز",
+
+          "primary",
+
+          async function () {
+
+            try {
+
+              await navigator
+                .clipboard
+                .writeText(
+                  centerLink
+                );
+
+
+              notify(
+                "تم نسخ رابط المركز"
+              );
+
+            }
+
+            catch (error) {
+
+              linkInput.focus();
+
+              linkInput.select();
+
+
+              notify(
+
+                "تم تحديد الرابط، انسخه يدويًا"
+
+              );
+
+            }
+
+          }
+
+        );
+
+
+      content.append(
+
+        linkLabel,
+
+        linkInput,
+
+        qrImage,
+
+        copyButton
+
+      );
+
+
+      modal.classList.add(
+        "open"
+      );
+
+    }
+
+
+
+    // إغلاق بيانات المركز
+
+    function closeCenterDetails() {
+
+      document
+        .getElementById(
+          "centerDetailsModal"
+        )
+        .classList
+        .remove("open");
+
+    }
+
+
+
+    // تعبئة قائمة المراكز
+
     function fillCenterSelect() {
+
       const select =
         document.getElementById(
           "deviceCenter"
         );
 
+
       select.replaceChildren(
+
         new Option(
           "اختر المركز",
           ""
         )
+
       );
 
-      centers.forEach(function (center) {
-        select.add(
-          new Option(
-            center.name +
-            " - " +
-            center.id,
 
-            center.id
-          )
-        );
-      });
+      centers.forEach(
+
+        function (center) {
+
+          select.add(
+
+            new Option(
+
+              center.name +
+              " - " +
+              center.id,
+
+              center.id
+
+            )
+
+          );
+
+        }
+
+      );
+
     }
+
+
+
+    // تحميل موظفي المركز
+
     async function loadEmployees() {
-  const centerSelect =
-    document.getElementById(
-      "deviceCenter"
-    );
-
-  const employeeSelect =
-    document.getElementById(
-      "deviceEmployee"
-    );
-
-  const centerId =
-    centerSelect.value;
-
-  employeeSelect.replaceChildren(
-    new Option(
-      centerId
-        ? "جاري تحميل الموظفين..."
-        : "اختر المركز أولًا",
-      ""
-    )
-  );
-
-  if (!centerId) {
-    return;
-  }
-
-  try {
-    const response =
-      await callAPI({
-        action: "getCenterData",
-        centerId: centerId
-      });
-
-    console.log(
-      "بيانات المركز:",
-      response
-    );
-
-    const employees =
-      response &&
-      Array.isArray(response.employees)
-        ? response.employees
-        : [];
-
-    employeeSelect.replaceChildren(
-      new Option(
-        "اختر الموظف",
-        ""
-      )
-    );
-
-    employees.forEach(
-      function (employee) {
-        employeeSelect.add(
-          new Option(
-            employee.name +
-            " - " +
-            employee.id,
-
-            employee.id
-          )
-        );
-      }
-    );
-
-    if (employees.length === 0) {
-      employeeSelect.replaceChildren(
-        new Option(
-          "لا يوجد موظفون في هذا المركز",
-          ""
-        )
-      );
-    }
-
-  } catch (error) {
-    console.error(
-      "خطأ تحميل الموظفين:",
-      error
-    );
-
-    employeeSelect.replaceChildren(
-      new Option(
-        "تعذر تحميل الموظفين",
-        ""
-      )
-    );
-
-    notify(
-      error.message,
-      true
-    );
-  }
-}
-    function openDeviceModal(centerId) {
-      const modal =
-        document.getElementById(
-          "deviceModal"
-        );
 
       const centerSelect =
         document.getElementById(
           "deviceCenter"
         );
 
-      modal.classList.add("open");
-      centerSelect.value = centerId || "";
+
+      const employeeSelect =
+        document.getElementById(
+          "deviceEmployee"
+        );
+
+
+      const centerId =
+        centerSelect.value;
+
+
+      employeeSelect.replaceChildren(
+
+        new Option(
+
+          centerId
+
+            ? "جاري تحميل الموظفين..."
+
+            : "اختر المركز أولًا",
+
+          ""
+
+        )
+
+      );
+
+
+      if (!centerId) {
+
+        return;
+
+      }
+
+
+      try {
+
+        const response =
+          await callAPI({
+
+            action:
+              "getCenterData",
+
+            centerId:
+              centerId
+
+          });
+
+
+        const employees =
+
+          response &&
+          Array.isArray(
+            response.employees
+          )
+
+            ? response.employees
+
+            : [];
+
+
+        employeeSelect.replaceChildren(
+
+          new Option(
+            "اختر الموظف",
+            ""
+          )
+
+        );
+
+
+        employees.forEach(
+
+          function (employee) {
+
+            employeeSelect.add(
+
+              new Option(
+
+                employee.name +
+                " - " +
+                employee.id,
+
+                employee.id
+
+              )
+
+            );
+
+          }
+
+        );
+
+
+        if (!employees.length) {
+
+          employeeSelect.replaceChildren(
+
+            new Option(
+
+              "لا يوجد موظفون في هذا المركز",
+
+              ""
+
+            )
+
+          );
+
+        }
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+
+        employeeSelect.replaceChildren(
+
+          new Option(
+
+            "تعذر تحميل الموظفين",
+
+            ""
+
+          )
+
+        );
+
+
+        notify(
+
+          error.message ||
+          "تعذر تحميل الموظفين",
+
+          true
+
+        );
+
+      }
+
+    }
+
+
+
+    // فتح نافذة مسح الجهاز
+
+    function openDeviceModal(
+      centerId
+    ) {
+
+      const modal =
+        document.getElementById(
+          "deviceModal"
+        );
+
+
+      const centerSelect =
+        document.getElementById(
+          "deviceCenter"
+        );
+
+
+      modal.classList.add(
+        "open"
+      );
+
+
+      centerSelect.value =
+        centerId || "";
+
 
       loadEmployees();
+
     }
 
-    function closeModal() {
+
+
+    // إغلاق نافذة مسح الجهاز
+
+    function closeDeviceModal() {
+
       document
-        .getElementById("deviceModal")
+        .getElementById(
+          "deviceModal"
+        )
         .classList
         .remove("open");
+
     }
 
+
+
+    // مسح ربط الجهاز
+
     async function clearDevice() {
+
       const centerId =
         document
           .getElementById(
             "deviceCenter"
           )
           .value;
+
 
       const employeeId =
         document
@@ -1139,276 +1824,405 @@ function closeCenterDetails() {
           )
           .value;
 
+
       const button =
         document.getElementById(
           "clearBtn"
         );
 
-      if (!centerId || !employeeId) {
+
+      if (
+        !centerId ||
+        !employeeId
+      ) {
+
         notify(
+
           "اختر المركز والموظف أولًا",
+
           true
+
         );
 
+
         return;
+
       }
 
-      const confirmed = confirm(
-        "هل تريد مسح الجهاز المرتبط بهذا الموظف؟"
-      );
 
-      if (!confirmed) {
+      if (
+        !confirm(
+          "هل تريد مسح الجهاز المرتبط بهذا الموظف؟"
+        )
+      ) {
+
         return;
+
       }
 
-      button.disabled = true;
+
+      const oldText =
+        button.textContent;
+
+
+      button.disabled =
+        true;
+
+
+      button.textContent =
+        "جاري المسح...";
+
 
       try {
+
         const result =
           await callAPI({
+
             action:
               "clearEmployeeDevice",
 
-            centerId: centerId,
+            centerId:
+              centerId,
 
-            employeeId: employeeId
+            employeeId:
+              employeeId
+
           });
 
+
         notify(
+
           result.message ||
           "تم مسح ربط الجوال"
+
         );
 
-        closeModal();
+
+        closeDeviceModal();
+
+
         loadDashboard();
 
-      } catch (error) {
-        notify(error.message, true);
-
-      } finally {
-        button.disabled = false;
       }
+
+      catch (error) {
+
+        console.error(error);
+
+
+        notify(
+
+          error.message ||
+          "تعذر مسح الجهاز",
+
+          true
+
+        );
+
+      }
+
+      finally {
+
+        button.disabled =
+          false;
+
+
+        button.textContent =
+          oldText;
+
+      }
+
     }
 
+
+
+    // إرسال التقرير
+
+    async function sendReport(
+      center,
+      reportType,
+      button
+    ) {
+
+      if (!center.email) {
+
+        notify(
+
+          "لا يوجد بريد إلكتروني مسجل لهذا المركز",
+
+          true
+
+        );
+
+
+        return;
+
+      }
+
+
+      const reportName =
+
+        reportType === "monthly"
+
+          ? "الشهري"
+
+          : "اليومي";
+
+
+      const confirmed =
+        confirm(
+
+          "هل تريد إرسال التقرير " +
+
+          reportName +
+
+          " إلى:\n" +
+
+          center.email +
+
+          "؟"
+
+        );
+
+
+      if (!confirmed) {
+
+        return;
+
+      }
+
+
+      const oldText =
+        button.textContent;
+
+
+      button.disabled =
+        true;
+
+
+      button.textContent =
+        "جاري الإرسال...";
+
+
+      try {
+
+        const result =
+          await callAPI({
+
+            action:
+              "sendCenterReport",
+
+            centerId:
+              center.id,
+
+            reportType:
+              reportType
+
+          });
+
+
+        notify(
+
+          result.message ||
+          "تم إرسال التقرير بنجاح"
+
+        );
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+
+        notify(
+
+          error.message ||
+          "تعذر إرسال التقرير",
+
+          true
+
+        );
+
+      }
+
+      finally {
+
+        button.disabled =
+          false;
+
+
+        button.textContent =
+          oldText;
+
+      }
+
+    }
+
+
+
+    // البحث عن مركز
+
+    function searchCenters() {
+
+      const query =
+        document
+          .getElementById(
+            "search"
+          )
+          .value
+          .trim()
+          .toLowerCase();
+
+
+      const filtered =
+        centers.filter(
+
+          function (center) {
+
+            return (
+
+              String(
+                center.id || ""
+              )
+              .toLowerCase()
+              .includes(query)
+
+              ||
+
+              String(
+                center.name || ""
+              )
+              .toLowerCase()
+              .includes(query)
+
+              ||
+
+              String(
+                center.manager || ""
+              )
+              .toLowerCase()
+              .includes(query)
+
+            );
+
+          }
+
+        );
+
+
+      renderCenters(
+        filtered
+      );
+
+    }
+
+
+
+    // ربط الأحداث
+
     document
-      .getElementById("deviceCenter")
+      .getElementById(
+        "refreshButton"
+      )
+      .addEventListener(
+        "click",
+        loadDashboard
+      );
+
+
+    document
+      .getElementById(
+        "search"
+      )
+      .addEventListener(
+        "input",
+        searchCenters
+      );
+
+
+    document
+      .getElementById(
+        "deviceCenter"
+      )
       .addEventListener(
         "change",
         loadEmployees
       );
 
-    document
-      .getElementById("search")
-      .addEventListener(
-        "input",
-        function (event) {
-          const query =
-            event.target.value
-              .trim()
-              .toLowerCase();
-
-          const filtered =
-            centers.filter(
-              function (center) {
-                return (
-                  String(center.id)
-                    .toLowerCase()
-                    .includes(query) ||
-
-                  String(center.name)
-                    .toLowerCase()
-                    .includes(query)
-                );
-              }
-            );
-
-          render(filtered);
-        }
-      );
 
     document
-      .getElementById("deviceModal")
+      .getElementById(
+        "clearBtn"
+      )
       .addEventListener(
         "click",
+        clearDevice
+      );
+
+
+    document
+      .getElementById(
+        "deviceModal"
+      )
+      .addEventListener(
+
+        "click",
+
         function (event) {
+
           if (
             event.target.id ===
             "deviceModal"
           ) {
-            closeModal();
+
+            closeDeviceModal();
+
           }
+
         }
+
       );
 
+
     document
-      .getElementById("addLink")
-      .href = formUrl();
-    document
-  .getElementById(
-    "centerDetailsModal"
-  )
-  .addEventListener(
-    "click",
-    function (event) {
-      if (
-        event.target.id ===
+      .getElementById(
         "centerDetailsModal"
-      ) {
-        closeCenterDetails();
-      }
-    }
-  );
+      )
+      .addEventListener(
+
+        "click",
+
+        function (event) {
+
+          if (
+            event.target.id ===
+            "centerDetailsModal"
+          ) {
+
+            closeCenterDetails();
+
+          }
+
+        }
+
+      );
+
+
+    document
+      .getElementById(
+        "addLink"
+      )
+      .href =
+        formUrl();
+
+
+    // تحميل البيانات مرة واحدة
 
     loadDashboard();
 
-    async function sendReport(
-  center,
-  reportType,
-  button
-) {
-
-  const API_URL =
-    "https://script.google.com/macros/s/AKfycbwPBzaB_4XuvCiKO87Kcuc3G-VVpejIhRDKVLnPlS6CTDHfbADTwdXhfblvhbyCqO2w/exec";
-
-
-  if (!center.email) {
-
-    alert(
-      "لا يوجد بريد إلكتروني مسجل لهذا المركز"
-    );
-
-    return;
-
-  }
-
-
-  const reportName =
-    reportType === "monthly"
-      ? "الشهري"
-      : "اليومي";
-
-
-  const confirmed =
-    confirm(
-      "هل تريد إرسال التقرير " +
-      reportName +
-      " إلى:\n" +
-      center.email +
-      "؟"
-    );
-
-
-  if (!confirmed) {
-
-    return;
-
-  }
-
-
-  const oldText =
-    button.textContent;
-
-
-  button.disabled = true;
-
-  button.textContent =
-    "جاري الإرسال...";
-
-
-  try {
-
-    const response = await fetch(
-      API_URL,
-      {
-
-        method: "POST",
-
-        headers: {
-
-          "Content-Type":
-            "text/plain;charset=utf-8"
-
-        },
-
-        body: JSON.stringify({
-
-          action: "sendCenterReport",
-
-          centerId: center.id,
-
-          reportType: reportType
-
-        })
-
-      }
-    );
-
-
-    const text =
-      await response.text();
-
-
-    if (
-      !text ||
-      text.trim().startsWith("<")
-    ) {
-
-      throw new Error(
-        "استجابة الخادم غير صحيحة"
-      );
-
-    }
-
-
-    const result =
-      JSON.parse(text);
-
-
-    if (!result.success) {
-
-      throw new Error(
-        result.error ||
-        "تعذر إرسال التقرير"
-      );
-
-    }
-
-
-    const message =
-      result.data &&
-      result.data.message
-
-        ? result.data.message
-
-        : "تم إرسال التقرير بنجاح";
-
-
-    alert(message);
-
-  }
-
-  catch (error) {
-
-    console.error(error);
-
-
-    alert(
-      "تعذر إرسال التقرير: " +
-      error.message
-    );
-
-  }
-
-  finally {
-
-    button.disabled = false;
-
-    button.textContent = oldText;
-
-  }
-
-}
   </script>
 
 </body>
+
 </html>
