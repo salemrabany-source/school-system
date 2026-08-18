@@ -899,12 +899,16 @@ function closeCenterDetails() {
         );
       });
     }
-async function loadEmployees() {
+    async function loadEmployees() {
   const centerSelect =
-    document.getElementById("deviceCenter");
+    document.getElementById(
+      "deviceCenter"
+    );
 
   const employeeSelect =
-    document.getElementById("deviceEmployee");
+    document.getElementById(
+      "deviceEmployee"
+    );
 
   const centerId =
     centerSelect.value;
@@ -925,20 +929,20 @@ async function loadEmployees() {
   try {
     const response =
       await callAPI({
-        action: "getEmployees",
+        action: "getCenterData",
         centerId: centerId
       });
 
-    let employees = [];
+    console.log(
+      "بيانات المركز:",
+      response
+    );
 
-    if (Array.isArray(response)) {
-      employees = response;
-    } else if (
+    const employees =
       response &&
       Array.isArray(response.employees)
-    ) {
-      employees = response.employees;
-    }
+        ? response.employees
+        : [];
 
     employeeSelect.replaceChildren(
       new Option(
@@ -962,13 +966,20 @@ async function loadEmployees() {
     );
 
     if (employees.length === 0) {
-      notify(
-        "لا يوجد موظفون في هذا المركز",
-        true
+      employeeSelect.replaceChildren(
+        new Option(
+          "لا يوجد موظفون في هذا المركز",
+          ""
+        )
       );
     }
 
   } catch (error) {
+    console.error(
+      "خطأ تحميل الموظفين:",
+      error
+    );
+
     employeeSelect.replaceChildren(
       new Option(
         "تعذر تحميل الموظفين",
@@ -976,10 +987,12 @@ async function loadEmployees() {
       )
     );
 
-    notify(error.message, true);
+    notify(
+      error.message,
+      true
+    );
   }
 }
-
     function openDeviceModal(centerId) {
       const modal =
         document.getElementById(
@@ -1138,7 +1151,7 @@ async function loadEmployees() {
       }
     }
   );
-  
+
     loadDashboard();
   </script>
 
