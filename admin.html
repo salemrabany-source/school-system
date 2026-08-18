@@ -557,7 +557,7 @@
         4000
       );
     }
-function render(list) {
+function renderCenters(list) {
 
   const body =
     document.getElementById("centersBody");
@@ -962,7 +962,7 @@ function closeCenterDetails() {
           .getElementById("devicesCount")
           .textContent =
             data.devicesCount || 0;
-
+            
         renderCenters(centers);
         fillCenterSelect();
 
