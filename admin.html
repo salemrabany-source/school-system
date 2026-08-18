@@ -391,6 +391,31 @@
 
   </main>
 
+  <div id="centerDetailsModal" class="modal">
+
+  <div class="dialog">
+
+    <h3 id="detailsCenterName">
+      بيانات المركز
+    </h3>
+
+    <div id="centerDetailsContent"></div>
+
+    <div class="dialog-actions">
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="closeCenterDetails()">
+        إغلاق
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
   <div id="deviceModal" class="modal">
 
     <div class="dialog">
@@ -581,6 +606,22 @@
 
         actions.className = "actions";
 
+        const detailsButton =
+  document.createElement("button");
+
+detailsButton.type = "button";
+
+detailsButton.className =
+  "secondary small";
+
+detailsButton.textContent =
+  "بيانات";
+
+detailsButton.onclick =
+  function () {
+    openCenterDetails(center);
+  };
+
         const editLink =
           document.createElement("a");
 
@@ -609,15 +650,188 @@
           };
 
         actions.append(
-          editLink,
-          deviceButton
-        );
+  detailsButton,
+  editLink,
+  deviceButton
+);
 
         actionsCell.appendChild(actions);
         row.appendChild(actionsCell);
         body.appendChild(row);
       });
     }
+    
+    function openCenterDetails(center) {
+  const modal =
+    document.getElementById(
+      "centerDetailsModal"
+    );
+
+  const title =
+    document.getElementById(
+      "detailsCenterName"
+    );
+
+  const content =
+    document.getElementById(
+      "centerDetailsContent"
+    );
+
+  title.textContent =
+    center.name +
+    " - " +
+    center.id;
+
+  content.replaceChildren();
+
+  const details = [
+    [
+      "رقم المركز",
+      center.id
+    ],
+    [
+      "اسم المركز",
+      center.name
+    ],
+    [
+      "المدير",
+      center.manager || "—"
+    ],
+    [
+      "البريد",
+      center.email || "—"
+    ],
+    [
+      "واتساب",
+      center.whatsapp || "—"
+    ],
+    [
+      "الموقع",
+      center.latitude &&
+      center.longitude
+
+        ? center.latitude +
+          "," +
+          center.longitude
+
+        : "—"
+    ],
+    [
+      "عدد الموظفين",
+      center.employeeCount || 0
+    ]
+  ];
+
+  details.forEach(
+    function (item) {
+      const paragraph =
+        document.createElement("p");
+
+      const label =
+        document.createElement("strong");
+
+      label.textContent =
+        item[0] + ": ";
+
+      paragraph.appendChild(label);
+
+      paragraph.append(
+        String(item[1])
+      );
+
+      content.appendChild(paragraph);
+    }
+  );
+
+  const centerLink =
+    center.link ||
+    (
+      "https://centres.rimgat.com/?center=" +
+      encodeURIComponent(center.id)
+    );
+
+  const linkLabel =
+    document.createElement("strong");
+
+  linkLabel.textContent =
+    "رابط المركز:";
+
+  const linkInput =
+    document.createElement("input");
+
+  linkInput.value = centerLink;
+  linkInput.readOnly = true;
+  linkInput.dir = "ltr";
+  linkInput.style.width = "100%";
+  linkInput.style.marginTop = "8px";
+
+  const qrImage =
+    document.createElement("img");
+
+  qrImage.alt =
+    "كود QR للمركز";
+
+  qrImage.src =
+    center.qr ||
+    (
+      "https://quickchart.io/qr" +
+      "?size=500&text=" +
+      encodeURIComponent(centerLink)
+    );
+
+  qrImage.style.display = "block";
+  qrImage.style.width = "220px";
+  qrImage.style.maxWidth = "100%";
+  qrImage.style.margin =
+    "15px auto";
+
+  const copyButton =
+    document.createElement("button");
+
+  copyButton.type = "button";
+  copyButton.className = "primary";
+  copyButton.textContent =
+    "نسخ رابط المركز";
+
+  copyButton.onclick =
+    async function () {
+      try {
+        await navigator.clipboard
+          .writeText(centerLink);
+
+        notify(
+          "تم نسخ رابط المركز"
+        );
+
+      } catch (error) {
+        linkInput.focus();
+        linkInput.select();
+
+        notify(
+          "تم تحديد الرابط، انسخه يدويًا"
+        );
+      }
+    };
+
+  content.append(
+    linkLabel,
+    linkInput,
+    qrImage,
+    copyButton
+  );
+
+  modal.classList.add("open");
+}
+
+
+function closeCenterDetails() {
+  document
+    .getElementById(
+      "centerDetailsModal"
+    )
+    .classList
+    .remove("open");
+}
 
     async function loadDashboard() {
       try {
@@ -685,66 +899,86 @@
         );
       });
     }
+async function loadEmployees() {
+  const centerSelect =
+    document.getElementById("deviceCenter");
 
-    async function loadEmployees() {
-      const centerSelect =
-        document.getElementById(
-          "deviceCenter"
-        );
+  const employeeSelect =
+    document.getElementById("deviceEmployee");
 
-      const employeeSelect =
-        document.getElementById(
-          "deviceEmployee"
-        );
+  const centerId =
+    centerSelect.value;
 
-      const centerId =
-        centerSelect.value;
+  employeeSelect.replaceChildren(
+    new Option(
+      centerId
+        ? "جاري تحميل الموظفين..."
+        : "اختر المركز أولًا",
+      ""
+    )
+  );
 
-      employeeSelect.replaceChildren(
-        new Option(
-          centerId
-            ? "جاري التحميل..."
-            : "اختر المركز أولًا",
-          ""
-        )
-      );
+  if (!centerId) {
+    return;
+  }
 
-      if (!centerId) {
-        return;
-      }
+  try {
+    const response =
+      await callAPI({
+        action: "getEmployees",
+        centerId: centerId
+      });
 
-      try {
-        const employees =
-          await callAPI({
-            action: "getEmployees",
-            centerId: centerId
-          });
+    let employees = [];
 
-        employeeSelect.replaceChildren(
+    if (Array.isArray(response)) {
+      employees = response;
+    } else if (
+      response &&
+      Array.isArray(response.employees)
+    ) {
+      employees = response.employees;
+    }
+
+    employeeSelect.replaceChildren(
+      new Option(
+        "اختر الموظف",
+        ""
+      )
+    );
+
+    employees.forEach(
+      function (employee) {
+        employeeSelect.add(
           new Option(
-            "اختر الموظف",
-            ""
+            employee.name +
+            " - " +
+            employee.id,
+
+            employee.id
           )
         );
-
-        employees.forEach(
-          function (employee) {
-            employeeSelect.add(
-              new Option(
-                employee.name +
-                " - " +
-                employee.id,
-
-                employee.id
-              )
-            );
-          }
-        );
-
-      } catch (error) {
-        notify(error.message, true);
       }
+    );
+
+    if (employees.length === 0) {
+      notify(
+        "لا يوجد موظفون في هذا المركز",
+        true
+      );
     }
+
+  } catch (error) {
+    employeeSelect.replaceChildren(
+      new Option(
+        "تعذر تحميل الموظفين",
+        ""
+      )
+    );
+
+    notify(error.message, true);
+  }
+}
 
     function openDeviceModal(centerId) {
       const modal =
@@ -889,7 +1123,22 @@
     document
       .getElementById("addLink")
       .href = formUrl();
-
+    document
+  .getElementById(
+    "centerDetailsModal"
+  )
+  .addEventListener(
+    "click",
+    function (event) {
+      if (
+        event.target.id ===
+        "centerDetailsModal"
+      ) {
+        closeCenterDetails();
+      }
+    }
+  );
+  
     loadDashboard();
   </script>
 
